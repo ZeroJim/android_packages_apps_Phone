@@ -40,4 +40,17 @@
             <extra android:name="autoStart" android:value="true" />
         </intent>
     </PreferenceScreen>
+    <!-- ADD BY Ivan -->
+    <PreferenceScreen
+        android:key="button_apn_key"
+        android:title="@string/apn_settings"
+        android:persistent="false">
+
+        <intent android:action="android.intent.action.MAIN"
+            android:targetPackage="com.android.settings"
+            android:targetClass="com.android.settings.Settings$ApnSettingsActivity" />
+
+    </PreferenceScreen>
+
+    <!-- END -->
 </PreferenceScreen>
