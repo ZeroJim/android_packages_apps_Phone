@@ -1722,17 +1722,18 @@ public class CallFeaturesSetting extends PreferenceActivity
 
     private void createSipCallSettings() {
         // Add Internet call settings.
-        if (PhoneUtils.isVoipSupported()) {
-            mSipManager = SipManager.newInstance(this);
-            mSipSharedPreferences = new SipSharedPreferences(this);
-            addPreferencesFromResource(R.xml.sip_settings_category);
-            mButtonSipCallOptions = getSipCallOptionPreference();
-            mButtonSipCallOptions.setOnPreferenceChangeListener(this);
-            mButtonSipCallOptions.setValueIndex(
-                    mButtonSipCallOptions.findIndexOfValue(
-                            mSipSharedPreferences.getSipCallOption()));
-            mButtonSipCallOptions.setSummary(mButtonSipCallOptions.getEntry());
-        }
+    	/**shutao 2012-10-25*/
+//        if (PhoneUtils.isVoipSupported()) {
+//            mSipManager = SipManager.newInstance(this);
+//            mSipSharedPreferences = new SipSharedPreferences(this);
+//            addPreferencesFromResource(R.xml.sip_settings_category);
+//            mButtonSipCallOptions = getSipCallOptionPreference();
+//            mButtonSipCallOptions.setOnPreferenceChangeListener(this);
+//            mButtonSipCallOptions.setValueIndex(
+//                    mButtonSipCallOptions.findIndexOfValue(
+//                            mSipSharedPreferences.getSipCallOption()));
+//            mButtonSipCallOptions.setSummary(mButtonSipCallOptions.getEntry());
+//        }
     }
 
     // Gets the call options for SIP depending on whether SIP is allowed only
