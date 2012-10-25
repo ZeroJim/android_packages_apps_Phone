@@ -34,5 +34,5 @@
     <!-- Used with some smaller texts in manage conference screen. -->
     <color name="manage_conference_secondary_text_color">#888888</color>
     
-    <color name="mobile_setting_background">#f5f5f5</color>
+    <color name="mobile_setting_background">#fff5f5f5</color>
 </resources>
