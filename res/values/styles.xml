@@ -159,6 +159,10 @@
     <style name="Theme.Settings" parent="@android:style/Theme.Holo.DialogWhenLarge">
         <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
+    
+     <style name="Theme.Settings.MobileNetworkSettings" parent="@android:style/Theme.Holo.Light">
+    	<item name="android:actionBarStyle">@*android:style/Widget.Holo.Light.ActionBar</item>
+    </style>
 
     <style name="InCallAnimationStyle" parent="@*android:style/Animation.Holo.Activity">
         <!-- Suppress task-to-task animation happening during the transition from

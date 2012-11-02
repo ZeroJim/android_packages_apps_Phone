@@ -222,8 +222,8 @@ public class MobileNetworkSettings extends PreferenceActivity
         mHandler = new MyHandler();
         
         getActionBar().setIcon(R.drawable.ic_settings_data_usage);
-        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_bg));
-        getListView().setBackgroundColor(getResources().getColor(R.color.mobile_setting_background));
+        //getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_bg));
+        //getListView().setBackgroundColor(getResources().getColor(R.color.mobile_setting_background));
 
         //get UI object references
         PreferenceScreen prefSet = getPreferenceScreen();
