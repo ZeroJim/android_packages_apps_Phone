@@ -596,11 +596,11 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
                 && !TextUtils.equals(number, mContext.getString(R.string.unknown))){
             if (DBG) log("Add actions with the number " + number);
 
-            builder.addAction(R.drawable.stat_sys_phone_call,
+            builder.addAction(R.drawable.stat_sys_phone_call_1,
                     mContext.getString(R.string.notification_missedCall_call_back),
                     PhoneApp.getCallBackPendingIntent(mContext, number));
 
-            builder.addAction(R.drawable.ic_text_holo_dark,
+            builder.addAction(R.drawable.ic_text_holo_dark_1,
                     mContext.getString(R.string.notification_missedCall_message),
                     PhoneApp.getSendSmsFromNotificationPendingIntent(mContext, number));
 
