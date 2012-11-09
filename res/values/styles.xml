@@ -122,14 +122,13 @@
     <style name="VerticalSeparator">
         <item name="android:layout_width">2dp</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@android:color/black</item>
+        <item name="android:background">@color/incall_call_banner_background</item>
     </style>
 
     <!-- "End" button; similar to InCallButton. -->
     <style name="InCallEndButton">
         <item name="android:layout_width">0dip</item>
         <item name="android:layout_height">@dimen/in_call_end_button_height</item>
-        <item name="android:layout_weight">1</item>
     </style>
 
     <!-- Buttons in extra button row. -->

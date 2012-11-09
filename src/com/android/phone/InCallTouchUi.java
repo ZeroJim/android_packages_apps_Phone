@@ -37,6 +37,7 @@ import android.view.ViewStub;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -89,14 +90,14 @@ public class InCallTouchUi extends FrameLayout
     //
     private ImageButton mAddButton;
     private ImageButton mMergeButton;
-    private ImageButton mEndButton;
+    private Button mEndButton;
     private CompoundButton mDialpadButton;
     private CompoundButton mMuteButton;
     private CompoundButton mAudioButton;
     private CompoundButton mHoldButton;
     private ImageButton mSwapButton;
-    private View mHoldSwapSpacer;
-
+    // by songzhentao 2012.11.8
+    // private View mHoldSwapSpacer;
     // "Extra button row"
     private ViewStub mExtraButtonRow;
     private ViewGroup mCdmaMergeButton;
@@ -170,7 +171,7 @@ public class InCallTouchUi extends FrameLayout
         mMergeButton = (ImageButton) mInCallControls.findViewById(R.id.mergeButton);
         mMergeButton.setOnClickListener(this);
         mMergeButton.setOnLongClickListener(this);
-        mEndButton = (ImageButton) mInCallControls.findViewById(R.id.endButton);
+        mEndButton = (Button) mInCallControls.findViewById(R.id.endButton);
         mEndButton.setOnClickListener(this);
         mDialpadButton = (CompoundButton) mInCallControls.findViewById(R.id.dialpadButton);
         mDialpadButton.setOnClickListener(this);
@@ -187,7 +188,7 @@ public class InCallTouchUi extends FrameLayout
         mSwapButton = (ImageButton) mInCallControls.findViewById(R.id.swapButton);
         mSwapButton.setOnClickListener(this);
         mSwapButton.setOnLongClickListener(this);
-        mHoldSwapSpacer = mInCallControls.findViewById(R.id.holdSwapSpacer);
+        // mHoldSwapSpacer = mInCallControls.findViewById(R.id.holdSwapSpacer);
 
         // TODO: Back when these buttons had text labels, we changed
         // the label of mSwapButton for CDMA as follows:
@@ -542,11 +543,11 @@ public class InCallTouchUi extends FrameLayout
                 mHoldButton.setEnabled(false);
                 mHoldButton.setChecked(false);
                 mSwapButton.setVisibility(View.GONE);
-                mHoldSwapSpacer.setVisibility(View.VISIBLE);
+                // mHoldSwapSpacer.setVisibility(View.VISIBLE);
             } else {
                 mHoldButton.setVisibility(View.GONE);
                 mSwapButton.setVisibility(View.GONE);
-                mHoldSwapSpacer.setVisibility(View.GONE);
+                // mHoldSwapSpacer.setVisibility(View.GONE);
             }
         }
         mInCallScreen.updateButtonStateOutsideInCallTouchUi();

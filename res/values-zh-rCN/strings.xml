@@ -675,4 +675,5 @@
     <string name="vibrate_hangup">通话结束时震动</string>
     <string name="vibrate_45">45秒震动</string>
     <string name="vibrate_45_sum">呼出通话到达每分钟的45秒时震动</string>
+    <string name="in_call_end_button_string">  结 束</string>
 </resources>

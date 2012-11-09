@@ -19,7 +19,7 @@
 
     <!-- Height of the "call banner" overlay on top of the upper part of
          the call info area. -->
-    <dimen name="call_banner_height">80dp</dimen>
+    <dimen name="call_banner_height">40dp</dimen>
 
     <!-- Margin between the bottom of the "call card" photo
          and the top of the in-call button cluster. -->
@@ -39,10 +39,10 @@
     <dimen name="call_banner_name_number_right_padding">50sp</dimen>
 
     <!-- Height of the main row of in-call buttons. -->
-    <dimen name="in_call_button_height">76dp</dimen>
+    <dimen name="in_call_button_height">65dp</dimen>
 
     <!-- Height of the in-call "End" button. -->
-    <dimen name="in_call_end_button_height">74dp</dimen>
+    <dimen name="in_call_end_button_height">85dp</dimen>
 
     <!-- Width of buttons in the extra button row. -->
     <dimen name="extra_row_button_width">56dp</dimen>
@@ -90,5 +90,6 @@
          Right now answer/decline/reject icons have 38dp width/height.
          So, (94 - 38)/2 ==> 28dp -->
     <dimen name="incoming_call_widget_asset_margin">28dp</dimen>
-
+	<!-- by songzhentao 2012.11.8-->
+    <dimen name="incoming_call_control_btn_height">69dp</dimen>
 </resources>

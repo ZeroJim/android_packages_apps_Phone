@@ -67,23 +67,16 @@
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content" />
 
-            <!-- Row 2: The "End call" button. -->
-            <ImageButton android:id="@+id/endButton"
-                style="@style/InCallEndButton"
-                android:layout_width="match_parent"
-                android:src="@drawable/ic_dial_end_call"
-                android:background="@drawable/end_call_background"
-                android:contentDescription="@string/onscreenEndCallText" />
-
-            <!-- Row 3: The main batch of in-call buttons:
+            <!-- Row 2: The main batch of in-call buttons:
                     Dialpad / Audio mode / Mute / Hold / Add call
                  Visible in all states except while an incoming call is
                  ringing. -->
+                   <!-- android:background="@drawable/dialpad_background" -->
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/dialpad_background"
+              	
                 android:paddingLeft="@dimen/button_cluster_side_padding"
                 android:paddingRight="@dimen/button_cluster_side_padding"
                 >
@@ -101,7 +94,7 @@
                      GONE. -->
 
                 <!-- Separator between left padding and 1st button -->
-                <View style="@style/VerticalSeparator" />
+                <!-- <View style="@style/VerticalSeparator" /> -->
 
                 <!-- "Dialpad" -->
                 <!-- This is a "compound button": it has checked and unchecked states. -->
@@ -112,7 +105,7 @@
                     />
 
                 <!-- Separator between 1st and 2nd button -->
-                <View style="@style/VerticalSeparator" />
+                <!-- <View style="@style/VerticalSeparator" /> -->
 
                 <!-- "Audio mode" -->
                 <!-- This is a multi-mode button that can behave either like a
@@ -127,7 +120,7 @@
                     />
 
                 <!-- Separator between 2nd and 3rd button -->
-                <View style="@style/VerticalSeparator" />
+                <!-- <View style="@style/VerticalSeparator" /> -->
 
                 <!-- "Mute" -->
                 <!-- This is a "compound button": it has checked and unchecked states. -->
@@ -138,7 +131,7 @@
                     />
 
                 <!-- Separator between 3rd and 4th button -->
-                <View style="@style/VerticalSeparator" />
+                <!-- <View style="@style/VerticalSeparator" /> -->
 
                 <!-- This slot is either "Hold" or "Swap", depending on
                      the state of the call.   One or the other of these
@@ -158,8 +151,8 @@
                     />
 
                 <!-- Separator between 4th and 5th button (if 5th exists) -->
-                <View android:id="@+id/holdSwapSpacer"
-                      style="@style/VerticalSeparator" />
+                <!-- <View android:id="@+id/holdSwapSpacer"
+                      style="@style/VerticalSeparator" /> -->
 
                 <!-- This slot is either "Add" or "Merge", depending on
                      the state of the call.  One or the other of these
@@ -181,10 +174,30 @@
                     />
 
                 <!-- Separator between 4th (or 5th) button and right padding -->
-                <View style="@style/VerticalSeparator" />
+                <!-- <View style="@style/VerticalSeparator" /> -->
 
             </LinearLayout>
 
+            <!-- Row 3: The "End call" button. -->
+            <LinearLayout 
+                android:layout_width="match_parent"
+                style="@style/InCallEndButton">
+	            <Button android:id="@+id/endButton"
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_marginLeft="15dp"
+	                android:layout_marginRight="15dp"
+	                android:layout_marginBottom="25dp"
+	                android:layout_marginTop="0dp"
+	                android:paddingLeft="87dp"
+	                android:drawablePadding="10dp"
+	                android:gravity="center_vertical"
+	                android:text="@string/in_call_end_button_string"
+	                android:textSize="22dp"
+	                android:drawableLeft="@drawable/ic_dial_end_call"
+	                android:background="@drawable/end_call_background"
+	                android:contentDescription="@string/onscreenEndCallText" />
+            </LinearLayout>
         </LinearLayout>
 
     </RelativeLayout>

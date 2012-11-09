@@ -50,6 +50,7 @@ import com.android.internal.telephony.Phone;
 
 import java.util.List;
 
+import com.android.phone.location.PhoneLocation;
 
 /**
  * "Call card" UI element: the in-call screen contains a tiled layout of call
@@ -246,9 +247,7 @@ public class CallCard extends LinearLayout
      */
     /* package */ void updateState(CallManager cm) {
         if (DBG) log("updateState(" + cm + ")...");
-
         // Update the onscreen UI based on the current state of the phone.
-
         Phone.State state = cm.getState();  // IDLE, RINGING, or OFFHOOK
         Call ringingCall = cm.getFirstActiveRingingCall();
         Call fgCall = cm.getActiveFgCall();
@@ -256,7 +255,6 @@ public class CallCard extends LinearLayout
 
         // Update the overall layout of the onscreen elements.
         updateCallInfoLayout(state);
-
         // If the FG call is dialing/alerting, we should display for that call
         // and ignore the ringing call. This case happens when the telephony
         // layer rejects the ringing call while the FG call is dialing/alerting,
@@ -455,7 +453,6 @@ public class CallCard extends LinearLayout
 
         Call.State state = call.getState();
         if (DBG) log("  - call.state: " + call.getState());
-
         switch (state) {
             case ACTIVE:
             case DISCONNECTING:
@@ -894,7 +891,7 @@ public class CallCard extends LinearLayout
                 // INCOMING, or WAITING.
                 // In all of these states, the "elapsed time" is meaningless, so
                 // don't show it.
-                AnimationUtils.Fade.hide(mElapsedTime, View.INVISIBLE);
+                AnimationUtils.Fade.hide(mElapsedTime, View.GONE);
 
                 // Additionally, in call states that can only occur at the start
                 // of a call, reset the elapsed time to be sure we won't display
@@ -939,7 +936,6 @@ public class CallCard extends LinearLayout
      */
     private void displaySecondaryCallStatus(CallManager cm, Call call) {
         if (DBG) log("displayOnHoldCallStatus(call =" + call + ")...");
-
         if ((call == null) || (PhoneApp.getInstance().isOtaCallInActiveState())) {
             mSecondaryCallInfo.setVisibility(View.GONE);
             return;
@@ -1003,6 +999,7 @@ public class CallCard extends LinearLayout
                         mSecondaryCallName.setText(
                                 getContext().getString(R.string.card_title_in_call));
                         showImage(mSecondaryCallPhoto, R.drawable.picture_unknown);
+                        mSecondaryCallPhoto.setVisibility(View.GONE);
                     } else {
                         // This means that the current Mobile Originated call IS the first 3-Way
                         // and hence we display the first callers/party's info here.
@@ -1023,7 +1020,7 @@ public class CallCard extends LinearLayout
                                     getContext(), info.numberPresentation);
                             forceGenericPhoto = true;
                         }
-                        mSecondaryCallName.setText(name);
+                        mSecondaryCallName.setText(name+"  "+info.phoneNumber);
 
                         // Also pull the photo out of the current CallerInfo.
                         // (Note we assume we already have a valid photo at
@@ -1036,6 +1033,7 @@ public class CallCard extends LinearLayout
                         } else {
                             showImage(mSecondaryCallPhoto, R.drawable.picture_unknown);
                         }
+                        mSecondaryCallPhoto.setVisibility(View.GONE);
                     }
                 } else {
                     // We shouldn't ever get here at all for non-CDMA devices.
@@ -1353,16 +1351,17 @@ public class CallCard extends LinearLayout
         } else {
             AnimationUtils.Fade.hide(mPhotoDimEffect, View.GONE);
         }
-
+        String location = null;
         if (displayNumber != null && !call.isGeneric()) {
+        	location = PhoneLocation.getCityFromPhone(displayNumber.replaceAll(" ", ""));
             mPhoneNumber.setText(displayNumber);
             mPhoneNumber.setVisibility(View.VISIBLE);
         } else {
             mPhoneNumber.setVisibility(View.GONE);
         }
-
-        if (label != null && !call.isGeneric()) {
-            mLabel.setText(label);
+        
+        if (location != null && !call.isGeneric()) {
+            mLabel.setText(location);
             mLabel.setVisibility(View.VISIBLE);
         } else {
             mLabel.setVisibility(View.GONE);
