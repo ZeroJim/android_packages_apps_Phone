@@ -1284,7 +1284,7 @@ public class InCallTouchUi extends FrameLayout
         }
 
         // Ok, run a ping (and schedule the next one too, if desired...)
-
+        mIncomingCallWidget.showRingTar();
         mIncomingCallWidget.ping();
 
         if (ENABLE_PING_AUTO_REPEAT) {

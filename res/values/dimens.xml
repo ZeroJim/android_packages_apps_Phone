@@ -92,4 +92,17 @@
     <dimen name="incoming_call_widget_asset_margin">28dp</dimen>
 	<!-- by songzhentao 2012.11.8-->
     <dimen name="incoming_call_control_btn_height">69dp</dimen>
+    
+    <!-- add lys -->
+    <dimen name="keyguard_lockscreen_outerring_diameter">256dp</dimen>
+    
+      <!-- Default target placement radius for GlowPadView. Should be 1/2 of outerring diameter. -->
+    <dimen name="glowpadview_target_placement_radius">128dip</dimen>
+
+    <!-- Default glow radius for GlowPadView -->
+    <dimen name="glowpadview_glow_radius">75dip</dimen>
+    
+        <!-- Default distance from each snap target that GlowPadView considers a "hit" -->
+    <dimen name="glowpadview_inner_radius">15dip</dimen>
+    
 </resources>
