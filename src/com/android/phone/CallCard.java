@@ -1242,6 +1242,7 @@ public class CallCard extends LinearLayout
                     displayName = info.cnapName;
                     info.name = info.cnapName;
                     displayNumber = number;
+                    System.out.println("info.cnapName == "+info.cnapName);
                     if (DBG) log("  ==> cnapName available: displayName '"
                                  + displayName + "', displayNumber '" + displayNumber + "'");
                 } else {
@@ -1249,7 +1250,6 @@ public class CallCard extends LinearLayout
                     // case when an incoming call doesn't match any contact,
                     // or if you manually dial an outgoing number using the
                     // dialpad.
-
                     // Promote the phone number up to the "name" slot:
                     displayName = number;
 
@@ -1259,9 +1259,10 @@ public class CallCard extends LinearLayout
                         // TODO (CallerInfoAsyncQuery cleanup): Fix the CallerInfo
                         // query to only do the geoDescription lookup in the first
                         // place for incoming calls.
-                        displayNumber = info.geoDescription;  // may be null
+                    	/**shutao 2012-11-19*/
+//                        displayNumber = info.geoDescription;  // may be null
+                    	   displayNumber = PhoneLocation.getCityFromPhone(number.replaceAll(" ", ""));
                     }
-
                     if (DBG) log("  ==>  no name; falling back to number: displayName '"
                                  + displayName + "', displayNumber '" + displayNumber + "'");
                 }
