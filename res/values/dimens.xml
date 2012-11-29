@@ -105,4 +105,7 @@
         <!-- Default distance from each snap target that GlowPadView considers a "hit" -->
     <dimen name="glowpadview_inner_radius">15dip</dimen>
     
+    <!-- shutao 2012-11-29  -->
+    <dimen name="incall_touch_ui_endbutton_lift">15dp</dimen>
+    
 </resources>
