@@ -15,5 +15,5 @@
 -->
 <resources>
     <!-- shutao 2012-11-29  -->
-    <dimen name="incall_touch_ui_endbutton_lift">35dp</dimen>
+    <dimen name="incall_touch_ui_endbutton_lift">107dp</dimen>
 </resources>
