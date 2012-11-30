@@ -1358,6 +1358,7 @@ public class CallCard extends LinearLayout
             mPhoneNumber.setText(displayNumber);
             mPhoneNumber.setVisibility(View.VISIBLE);
         } else {
+        	 location = PhoneLocation.getCityFromPhone(displayName.replaceAll(" ", ""));
             mPhoneNumber.setVisibility(View.GONE);
         }
         
