@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -37,6 +38,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,11 +59,11 @@ import com.android.phone.location.PhoneLocation;
  * cards, each representing the state of a current "call" (ie. an active call,
  * a call on hold, or an incoming call.)
  */
-public class CallCard extends LinearLayout
+public class CallCard extends FrameLayout
         implements CallTime.OnTickListener, CallerInfoAsyncQuery.OnQueryCompleteListener,
                    ContactsAsyncHelper.OnImageLoadCompleteListener {
     private static final String LOG_TAG = "CallCard";
-    private static final boolean DBG = (PhoneApp.DBG_LEVEL >= 2);
+    private static final boolean DBG = true;//(PhoneApp.DBG_LEVEL >= 2);
 
     private static final int TOKEN_UPDATE_PHOTO_FOR_CALL_STATE = 0;
     private static final int TOKEN_DO_NOTHING = 1;
@@ -1591,7 +1593,6 @@ public class CallCard extends LinearLayout
     private static final void showImage(ImageView view, Drawable drawable) {
         Resources res = view.getContext().getResources();
         Drawable current = (Drawable) view.getTag();
-
         if (current == null) {
             if (DBG) log("Start fade-in animation for " + view);
             view.setImageDrawable(drawable);

@@ -19,17 +19,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="0dp"
+    android:background="@drawable/incall_call_banner_background"
     android:layout_weight="1">
 
-    <!-- Contact photo for primary call info -->
-    <ImageView android:id="@+id/photo"
-         android:layout_alignParentLeft="true"
-         android:layout_alignParentTop="true"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:gravity="top|center_horizontal"
-         android:scaleType="centerCrop"
-         android:contentDescription="@string/contactPhoto" />
+
 
     <!-- Used when the phone call is on hold, dimming the primary photo
 
@@ -74,7 +67,7 @@
         android:paddingLeft="@dimen/call_banner_side_padding"
         android:paddingTop="12dp"
         android:paddingBottom="5dp"
-        android:background="@color/incall_call_banner_background">
+        android:background="@android:color/transparent">
         <!-- Name (or the phone number, if we don't have a name to display). -->
         <TextView android:id="@+id/name"
             android:layout_centerHorizontal="true"

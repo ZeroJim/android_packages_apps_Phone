@@ -76,7 +76,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-              	
+				android:background="@drawable/dial_background_image"
                 android:paddingLeft="@dimen/button_cluster_side_padding"
                 android:paddingRight="@dimen/button_cluster_side_padding"
                 >
@@ -235,7 +235,7 @@
         android:visibility="gone"
         android:layout_gravity="center_horizontal"
         android:gravity="top"
-
+		android:background="@drawable/incall_call_bottom_background"
         prvandroid:targetDrawables="@array/incoming_call_widget_3way_targets"
         prvandroid:targetDescriptions="@array/incoming_call_widget_3way_target_descriptions"
         prvandroid:directionDescriptions="@array/incoming_call_widget_3way_direction_descriptions"
