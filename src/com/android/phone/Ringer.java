@@ -390,6 +390,7 @@ public class Ringer {
                             r = mRingtone;
                             if (r != null && !hasMessages(STOP_RING) && !r.isPlaying()) {
                                 PhoneUtils.setAudioMode();
+				r.setLoop(true);
                                 r.play();
                                 synchronized (Ringer.this) {
                                     if (mFirstRingStartTime < 0) {
