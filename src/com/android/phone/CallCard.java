@@ -63,7 +63,7 @@ public class CallCard extends FrameLayout
         implements CallTime.OnTickListener, CallerInfoAsyncQuery.OnQueryCompleteListener,
                    ContactsAsyncHelper.OnImageLoadCompleteListener {
     private static final String LOG_TAG = "CallCard";
-    private static final boolean DBG = true;//(PhoneApp.DBG_LEVEL >= 2);
+    private static final boolean DBG = (PhoneApp.DBG_LEVEL >= 2);
 
     private static final int TOKEN_UPDATE_PHOTO_FOR_CALL_STATE = 0;
     private static final int TOKEN_DO_NOTHING = 1;
@@ -1394,7 +1394,7 @@ public class CallCard extends FrameLayout
             // the generic "dialing" icon and no caller information,
             // because in this state in CDMA the user does not really know
             // which caller party he is talking to.
-            showImage(mPhoto, R.drawable.picture_dialing);
+            showImage(mPhoto, R.drawable.picture_unknown);
             mName.setText(R.string.card_title_in_call);
         } else if ((phoneType == Phone.PHONE_TYPE_GSM)
                 || (phoneType == Phone.PHONE_TYPE_SIP)) {
