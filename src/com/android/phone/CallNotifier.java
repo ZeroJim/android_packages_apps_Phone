@@ -134,6 +134,7 @@ public class CallNotifier extends Handler
     private static final int PHONE_ENHANCED_VP_OFF = 10;
     private static final int PHONE_RINGBACK_TONE = 11;
     private static final int PHONE_RESEND_MUTE = 12;
+    private static final int PHONE_CDMA_CALL_CONNECT = 17;
 
     // Events generated internally:
     private static final int PHONE_MWI_CHANGED = 21;
@@ -283,6 +284,11 @@ public class CallNotifier extends Handler
             case PHONE_CDMA_CALL_WAITING:
                 if (DBG) log("Received PHONE_CDMA_CALL_WAITING event");
                 onCdmaCallWaiting((AsyncResult) msg.obj);
+                break;
+                
+            case PHONE_CDMA_CALL_CONNECT:
+                if (DBG) log("Received PHONE_CDMA_CALL_CONNECT event");
+                onCdmaCallConnect((AsyncResult) msg.obj);
                 break;
 
             case CDMA_CALL_WAITING_REJECT:
@@ -771,6 +777,7 @@ public class CallNotifier extends Handler
                 .enableNotificationAlerts(state == Phone.State.IDLE);
 
         Phone fgPhone = mCM.getFgPhone();
+        boolean isCdmaPhone = false;
         if (fgPhone != null) {
             if (fgPhone.getPhoneType() == Phone.PHONE_TYPE_CDMA) {
                 if ((fgPhone.getForegroundCall().getState() == Call.State.ACTIVE)
@@ -784,6 +791,7 @@ public class CallNotifier extends Handler
                 stopSignalInfoTone();
                 }
                 mPreviousCdmaCallState = fgPhone.getForegroundCall().getState();
+                isCdmaPhone = true;
             }
         }
 
@@ -817,7 +825,7 @@ public class CallNotifier extends Handler
                 if (VDBG) Log.v(LOG_TAG, "duration is " + callDurationMsec);
 
                 boolean vibOut = PhoneUtils.PhoneSettings.vibOutgoing(mApplication);
-                if (vibOut && callDurationMsec < 200) {
+                if (vibOut && callDurationMsec < 200 && !isCdmaPhone) {
                     vibrate(100, 0, 0);
                 }
 
@@ -920,6 +928,7 @@ public class CallNotifier extends Handler
         mCM.unregisterForNewRingingConnection(this);
         mCM.unregisterForPreciseCallStateChanged(this);
         mCM.unregisterForDisconnect(this);
+        mCM.unregisterForCallLineControl(this);
         mCM.unregisterForUnknownConnection(this);
         mCM.unregisterForIncomingRing(this);
         mCM.unregisterForCallWaiting(this);
@@ -951,6 +960,7 @@ public class CallNotifier extends Handler
         mCM.registerForNewRingingConnection(this, PHONE_NEW_RINGING_CONNECTION, null);
         mCM.registerForPreciseCallStateChanged(this, PHONE_STATE_CHANGED, null);
         mCM.registerForDisconnect(this, PHONE_DISCONNECT, null);
+        mCM.registerForCallLineControl(this, PHONE_CDMA_CALL_CONNECT, null);
         mCM.registerForUnknownConnection(this, PHONE_UNKNOWN_CONNECTION_APPEARED, null);
         mCM.registerForIncomingRing(this, PHONE_INCOMING_RING, null);
         mCM.registerForCdmaOtaStatusChange(this, EVENT_OTA_PROVISION_CHANGE, null);
@@ -1848,6 +1858,17 @@ public class CallNotifier extends Handler
             new SignalInfoTonePlayer(toneID).start();
         }
     }
+    
+    /**
+     * on cdma call first connect success.
+     */
+    private void onCdmaCallConnect(AsyncResult r) {
+    	// TODO: vibrate when connect success
+    	 boolean vibOut = PhoneUtils.PhoneSettings.vibOutgoing(mApplication);
+        if (vibOut) {
+            vibrate(100, 0, 0);
+        }
+    } 
 
     /**
      * Posts a event causing us to clean up after rejecting (or timing-out) a
