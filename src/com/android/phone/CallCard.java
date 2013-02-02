@@ -632,6 +632,9 @@ public class CallCard extends FrameLayout
         // use mPhoneNumber to display a hint like "Rotate to answer".
         if (mIncomingCallWidgetHintTextResId != 0) {
             // Display the hint!
+        	if (DBG) {
+                log( "displayNumber  -----------yyyy---------=========="+mIncomingCallWidgetHintTextResId);
+            }
             mPhoneNumber.setText(mIncomingCallWidgetHintTextResId);
             mPhoneNumber.setTextColor(getResources().getColor(mIncomingCallWidgetHintColorResId));
             mPhoneNumber.setVisibility(View.VISIBLE);
@@ -1266,7 +1269,7 @@ public class CallCard extends FrameLayout
                     	   displayNumber = PhoneLocation.getCityFromPhone(number.replaceAll(" ", ""));
                     }
                     if (DBG) log("  ==>  no name; falling back to number: displayName '"
-                                 + displayName + "', displayNumber '" + displayNumber + "'");
+                                 + displayName + "', displayNumber '" + displayNumber + "'"+PhoneLocation.getCityFromPhone(number.replaceAll(" ", "")));
                 }
             } else {
                 // We do have a valid "name" in the CallerInfo.  Display that
@@ -1312,7 +1315,7 @@ public class CallCard extends FrameLayout
         // the image load step if the image data is cached.
         if (isTemporary && (info == null || !info.isCachedPhotoCurrent)) {
             mPhoto.setTag(null);
-            mPhoto.setVisibility(View.INVISIBLE);
+//            mPhoto.setVisibility(View.INVISIBLE);
         } else if (info != null && info.photoResource != 0){
             showImage(mPhoto, info.photoResource);
         } else if (!showCachedImage(mPhoto, info)) {
@@ -1357,10 +1360,16 @@ public class CallCard extends FrameLayout
         String location = null;
         if (displayNumber != null && !call.isGeneric()) {
         	location = PhoneLocation.getCityFromPhone(displayNumber.replaceAll(" ", ""));
+        	if (DBG) {
+                log( "displayNumber  --------------------=========="+displayNumber);
+            }
             mPhoneNumber.setText(displayNumber);
             mPhoneNumber.setVisibility(View.VISIBLE);
         } else {
         	 location = PhoneLocation.getCityFromPhone(displayName.replaceAll(" ", ""));
+        		if (DBG) {
+                    log( "displayNumber  -----------111---------=========="+mName.getText().toString());
+                }
             mPhoneNumber.setVisibility(View.GONE);
         }
         
@@ -1582,11 +1591,11 @@ public class CallCard extends FrameLayout
 
     /** Helper function to display the resource in the imageview AND ensure its visibility.*/
     private static final void showImage(ImageView view, int resource) {
-        showImage(view, view.getContext().getResources().getDrawable(resource));
+//        showImage(view, view.getContext().getResources().getDrawable(resource));
     }
 
     private static final void showImage(ImageView view, Bitmap bitmap) {
-        showImage(view, new BitmapDrawable(view.getContext().getResources(), bitmap));
+//        showImage(view, new BitmapDrawable(view.getContext().getResources(), bitmap));
     }
 
     /** Helper function to display the drawable in the imageview AND ensure its visibility.*/

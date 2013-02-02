@@ -88,14 +88,14 @@ public class InCallTouchUi extends FrameLayout
     private boolean mShowInCallControlsDuringHidingAnimation;
 
     //
-    private ImageButton mAddButton;
-    private ImageButton mMergeButton;
+    private Button mAddButton;
+    private Button mMergeButton;
     private Button mEndButton;
     private CompoundButton mDialpadButton;
     private CompoundButton mMuteButton;
     private CompoundButton mAudioButton;
     private CompoundButton mHoldButton;
-    private ImageButton mSwapButton;
+    private Button mSwapButton;
     // by songzhentao 2012.11.8
     // private View mHoldSwapSpacer;
     // "Extra button row"
@@ -165,10 +165,10 @@ public class InCallTouchUi extends FrameLayout
 
         // Regular (single-tap) buttons, where we listen for click events:
         // Main cluster of buttons:
-        mAddButton = (ImageButton) mInCallControls.findViewById(R.id.addButton);
+        mAddButton = (Button) mInCallControls.findViewById(R.id.addButton);
         mAddButton.setOnClickListener(this);
         mAddButton.setOnLongClickListener(this);
-        mMergeButton = (ImageButton) mInCallControls.findViewById(R.id.mergeButton);
+        mMergeButton = (Button) mInCallControls.findViewById(R.id.mergeButton);
         mMergeButton.setOnClickListener(this);
         mMergeButton.setOnLongClickListener(this);
         mEndButton = (Button) mInCallControls.findViewById(R.id.endButton);
@@ -185,7 +185,7 @@ public class InCallTouchUi extends FrameLayout
         mHoldButton = (CompoundButton) mInCallControls.findViewById(R.id.holdButton);
         mHoldButton.setOnClickListener(this);
         mHoldButton.setOnLongClickListener(this);
-        mSwapButton = (ImageButton) mInCallControls.findViewById(R.id.swapButton);
+        mSwapButton = (Button) mInCallControls.findViewById(R.id.swapButton);
         mSwapButton.setOnClickListener(this);
         mSwapButton.setOnLongClickListener(this);
         // mHoldSwapSpacer = mInCallControls.findViewById(R.id.holdSwapSpacer);
@@ -750,27 +750,29 @@ public class InCallTouchUi extends FrameLayout
         // Constants used below with Drawable.setAlpha():
         final int HIDDEN = 0;
         final int VISIBLE = 255;
+//shutao 2012-2-1
+//        LayerDrawable layers = (LayerDrawable) mAudioButton.getBackground();
+//        if (DBG) log("- 'layers' drawable: " + layers);
 
-        LayerDrawable layers = (LayerDrawable) mAudioButton.getBackground();
-        if (DBG) log("- 'layers' drawable: " + layers);
+   /*     layers.findDrawableByLayerId(R.id.compoundBackgroundItem)
+                .setAlpha(showToggleStateIndication ? VISIBLE : HIDDEN);*/
 
-        layers.findDrawableByLayerId(R.id.compoundBackgroundItem)
-                .setAlpha(showToggleStateIndication ? VISIBLE : HIDDEN);
-
-        layers.findDrawableByLayerId(R.id.moreIndicatorItem)
-                .setAlpha(showMoreIndicator ? VISIBLE : HIDDEN);
-
-        layers.findDrawableByLayerId(R.id.bluetoothItem)
-                .setAlpha(showBluetoothIcon ? VISIBLE : HIDDEN);
-
-        layers.findDrawableByLayerId(R.id.handsetItem)
-                .setAlpha(showHandsetIcon ? VISIBLE : HIDDEN);
-
-        layers.findDrawableByLayerId(R.id.speakerphoneOnItem)
-                .setAlpha(showSpeakerOnIcon ? VISIBLE : HIDDEN);
-
-        layers.findDrawableByLayerId(R.id.speakerphoneOffItem)
-                .setAlpha(showSpeakerOffIcon ? VISIBLE : HIDDEN);
+//        layers.findDrawableByLayerId(R.id.moreIndicatorItem)
+//                .setAlpha(showMoreIndicator ? VISIBLE : HIDDEN);
+//
+//        layers.findDrawableByLayerId(R.id.bluetoothItem)
+//                .setAlpha(showBluetoothIcon ? VISIBLE : HIDDEN);
+//
+//        layers.findDrawableByLayerId(R.id.handsetItem)
+//                .setAlpha(showHandsetIcon ? VISIBLE : HIDDEN);
+        if(showBluetoothIcon)  mAudioButton.setBackgroundResource(R.drawable.ic_sound_bluetooth_holo_dark_selector);
+        if(showHandsetIcon)  mAudioButton.setBackgroundResource(R.drawable.ic_sound_handset_holo_dark_selector);
+        if(showSpeakerOnIcon)  mAudioButton.setBackgroundResource(R.drawable.ic_sound_off_speakerphone_holo_dark_selector);
+//        layers.findDrawableByLayerId(R.id.speakerphoneOnItem)
+//                .setAlpha(showSpeakerOnIcon ? VISIBLE : HIDDEN);
+        if(showSpeakerOffIcon)  mAudioButton.setBackgroundResource(R.drawable.ic_sound_off_speakerphone_holo_dark_selector);
+//        layers.findDrawableByLayerId(R.id.speakerphoneOffItem)
+//                .setAlpha(showSpeakerOffIcon ? VISIBLE : HIDDEN);
     }
 
     /**

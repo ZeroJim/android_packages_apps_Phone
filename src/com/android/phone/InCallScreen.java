@@ -701,7 +701,7 @@ public class InCallScreen extends Activity
         } else if (TelephonyCapabilities.supportsOtasp(mPhone)) {
             if (inCallUiState.inCallScreenMode == InCallScreenMode.OTA_NORMAL ||
                     inCallUiState.inCallScreenMode == InCallScreenMode.OTA_ENDED) {
-                if (mCallCard != null) mCallCard.setVisibility(View.GONE);
+                if (mCallCard != null) mCallCard.setVisibility(View.VISIBLE);
                 updateScreen();
                 return;
             }
@@ -2353,7 +2353,7 @@ public class InCallScreen extends Activity
 
         if (inCallScreenMode == InCallScreenMode.OTA_NORMAL) {
             if (DBG) log("- updateScreen: OTA call state NORMAL (NOT updating in-call UI)...");
-            mCallCard.setVisibility(View.GONE);
+            mCallCard.setVisibility(View.VISIBLE);
             if (mApp.otaUtils != null) {
                 mApp.otaUtils.otaShowProperScreen();
             } else {
@@ -2362,7 +2362,7 @@ public class InCallScreen extends Activity
             return;  // Return without updating in-call UI.
         } else if (inCallScreenMode == InCallScreenMode.OTA_ENDED) {
             if (DBG) log("- updateScreen: OTA call ended state (NOT updating in-call UI)...");
-            mCallCard.setVisibility(View.GONE);
+            mCallCard.setVisibility(View.VISIBLE);
             // Wake up the screen when we get notification, good or bad.
             mApp.wakeUpScreen();
             if (mApp.cdmaOtaScreenState.otaScreenState
@@ -2383,7 +2383,7 @@ public class InCallScreen extends Activity
             return;  // Return without updating in-call UI.
         } else if (inCallScreenMode == InCallScreenMode.MANAGE_CONFERENCE) {
             if (DBG) log("- updateScreen: manage conference mode (NOT updating in-call UI)...");
-            mCallCard.setVisibility(View.GONE);
+            mCallCard.setVisibility(View.VISIBLE);
             updateManageConferencePanelIfNecessary();
             return;  // Return without updating in-call UI.
         } else if (inCallScreenMode == InCallScreenMode.CALL_ENDED) {
@@ -3911,9 +3911,9 @@ public class InCallScreen extends Activity
                         + animate + "): dialpad open, hide mCallCard...");
             }
             if (animate) {
-                AnimationUtils.Fade.hide(mCallCard, View.GONE);
+                AnimationUtils.Fade.hide(mCallCard, View.VISIBLE);
             } else {
-                mCallCard.setVisibility(View.GONE);
+                mCallCard.setVisibility(View.VISIBLE);
             }
         } else {
             // Dialpad is dismissed; bring back the CallCard if it's supposed to be visible.

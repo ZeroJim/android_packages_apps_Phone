@@ -31,7 +31,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-
     <!--
         (1) inCallControls: the widgets visible while a regular call
         (or calls) is in progress
@@ -46,7 +45,7 @@
         <ViewStub android:id="@+id/dtmf_twelve_key_dialer_stub"
                   android:layout="@layout/dtmf_twelve_key_dialer_view"
                   android:layout_width="match_parent"
-                  android:layout_height="match_parent"
+                  android:layout_height="wrap_content"
                   android:layout_above="@+id/bottomButtons"
                   android:layout_marginBottom="@dimen/dialpad_vertical_margin" />
 
@@ -66,6 +65,13 @@
                       android:layout="@layout/extra_button_row"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content" />
+            
+            <LinearLayout 
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/incall_touch_ui_bottom_ui_height"
+                android:orientation="vertical"
+                android:background="@drawable/dial_background_image"
+                >
 
             <!-- Row 2: The main batch of in-call buttons:
                     Dialpad / Audio mode / Mute / Hold / Add call
@@ -75,8 +81,8 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-				android:background="@drawable/dial_background_image"
+                android:layout_height="@dimen/incall_touch_dialpad_men_height"
+				  android:gravity="center_vertical"
                 android:paddingLeft="@dimen/button_cluster_side_padding"
                 android:paddingRight="@dimen/button_cluster_side_padding"
                 >
@@ -102,8 +108,9 @@
                     style="@style/InCallCompoundButton"
                     android:background="@drawable/btn_compound_dialpad"
                     android:contentDescription="@string/onscreenShowDialpadText"
+                    android:text="@string/onscreenShowDialpadText"
+                    android:textColor="@color/incalltouchui_botton_text_color"
                     />
-
                 <!-- Separator between 1st and 2nd button -->
                 <!-- <View style="@style/VerticalSeparator" /> -->
 
@@ -117,6 +124,8 @@
                     style="@style/InCallCompoundButton"
                     android:background="@drawable/btn_compound_audio"
                     android:contentDescription="@string/onscreenAudioText"
+                    android:text="@string/onscreenAudioText"
+                    android:textColor="@color/incalltouchui_botton_text_color"
                     />
 
                 <!-- Separator between 2nd and 3rd button -->
@@ -128,6 +137,8 @@
                     style="@style/InCallCompoundButton"
                     android:background="@drawable/btn_compound_mute"
                     android:contentDescription="@string/onscreenMuteText"
+                    android:text="@string/onscreenMuteText"
+                    android:textColor="@color/incalltouchui_botton_text_color"
                     />
 
                 <!-- Separator between 3rd and 4th button -->
@@ -142,12 +153,17 @@
                     style="@style/InCallCompoundButton"
                     android:background="@drawable/btn_compound_hold"
                     android:contentDescription="@string/onscreenHoldText"
+                    android:text="@string/onscreenHoldText"
+                    android:textColor="@color/incalltouchui_botton_text_color"
                     />
                 <!-- "Swap" (or "Manage calls" in some CDMA states) -->
-                <ImageButton android:id="@+id/swapButton"
+                <Button android:id="@+id/swapButton"
                     style="@style/InCallButton"
-                    android:src="@drawable/ic_incall_switch_holo_dark"
+                    android:textSize="13sp"
+                    android:background="@drawable/ic_incall_switch_holo_dark_selector"
                     android:contentDescription="@string/onscreenSwapCallsText"
+                    android:text="@string/onscreenSwapCallsText"
+                    android:textColor="@color/incalltouchui_botton_text_color"
                     />
 
                 <!-- Separator between 4th and 5th button (if 5th exists) -->
@@ -158,18 +174,24 @@
                      the state of the call.  One or the other of these
                      must always be set to GONE. -->
                 <!-- "Add Call" -->
-                <ImageButton android:id="@+id/addButton"
+                <Button android:id="@+id/addButton"
                     style="@style/InCallButton"
-                    android:src="@drawable/ic_add_contact_holo_dark"
+                    android:textSize="13sp"
+                    android:background="@drawable/ic_add_contact_holo_dark_selector"
                     android:contentDescription="@string/onscreenAddCallText"
+                    android:textColor="@color/incalltouchui_botton_text_color"
+                    android:text="@string/onscreenAddCallText"
                     />
                 <!-- "Merge calls" -->
                 <!-- This button is used only on GSM devices, where we know
                      that "Add" and "Merge" are never available at the same time.
                      The "Merge" button for CDMA devices is "cdmaMergeButton" above. -->
-                <ImageButton android:id="@+id/mergeButton"
+                <Button android:id="@+id/mergeButton"
                     style="@style/InCallButton"
-                    android:src="@drawable/ic_merge_holo_dark"
+                    android:textSize="13sp"
+                    android:background="@drawable/ic_merge_holo_dark_selector"
+                    android:text="@string/onscreenMergeCallsText"
+                    android:textColor="@color/incalltouchui_botton_text_color"
                     android:contentDescription="@string/onscreenMergeCallsText"
                     />
 
@@ -181,22 +203,23 @@
             <!-- Row 3: The "End call" button. -->
             <LinearLayout 
                 android:layout_width="match_parent"
+                android:gravity="center_vertical"
                 style="@style/InCallEndButton">
+                <!-- shutao 2013-1-30    android:drawableLeft="@drawable/ic_dial_end_call" 
+                 android:text="@string/in_call_end_button_string"
+                 	                
+	                android:layout_marginBottom="@dimen/incall_touch_ui_endbutton_marginBottom"-->
 	            <Button android:id="@+id/endButton"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
-	                android:layout_marginLeft="15dp"
-	                android:layout_marginRight="15dp"
-	                android:layout_marginBottom="25dp"
+                    android:layout_marginLeft="@dimen/incall_touch_ui_endbutton_marginLeft"
+	                android:layout_marginRight="@dimen/incall_touch_ui_endbutton_marginRight"
 	                android:layout_marginTop="0dp"
 	                android:paddingLeft="@dimen/incall_touch_ui_endbutton_lift"
-	                android:drawablePadding="10dp"
 	                android:gravity="center_vertical"
-	                android:text="@string/in_call_end_button_string"
-	                android:textSize="22dp"
-	                android:drawableLeft="@drawable/ic_dial_end_call"
 	                android:background="@drawable/end_call_background"
 	                android:contentDescription="@string/onscreenEndCallText" />
+            </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -235,7 +258,7 @@
         android:visibility="gone"
         android:layout_gravity="center_horizontal"
         android:gravity="top"
-		android:background="@drawable/incall_call_bottom_background"
+		 android:background="@drawable/incall_call_bottom_background"
         prvandroid:targetDrawables="@array/incoming_call_widget_3way_targets"
         prvandroid:targetDescriptions="@array/incoming_call_widget_3way_target_descriptions"
         prvandroid:directionDescriptions="@array/incoming_call_widget_3way_direction_descriptions"

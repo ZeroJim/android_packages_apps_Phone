@@ -19,13 +19,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:background="@drawable/incall_call_banner_background"
+    
     android:layout_weight="1">
-
+<!--shutao 2013-1-30 android:background="@drawable/incall_call_banner_background" -->
 
 
     <!-- Used when the phone call is on hold, dimming the primary photo
-
          Note: Theoretically it is possible to achieve this effect using
          Drawable#setColorFilter().
 

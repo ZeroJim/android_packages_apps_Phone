@@ -42,7 +42,7 @@
     <dimen name="in_call_button_height">65dp</dimen>
 
     <!-- Height of the in-call "End" button. -->
-    <dimen name="in_call_end_button_height">85dp</dimen>
+    <dimen name="in_call_end_button_height">108dp</dimen>
 
     <!-- Width of buttons in the extra button row. -->
     <dimen name="extra_row_button_width">56dp</dimen>

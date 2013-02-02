@@ -35,4 +35,5 @@
     <color name="manage_conference_secondary_text_color">#888888</color>
     
     <color name="mobile_setting_background">#fff5f5f5</color>
+    <color name="incalltouchui_botton_text_color">#ffd7d0d0</color>
 </resources>

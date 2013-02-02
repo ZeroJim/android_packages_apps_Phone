@@ -15,16 +15,19 @@
 -->
 
 <!-- Layers used to render the in-call "Hold" compound button. -->
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- The standard "compound button" background. -->
-    <item android:drawable="@drawable/btn_compound_background" />
-
-    <!-- ...and the actual icon on top.  Use an explicit <bitmap> to avoid scaling
-         the icon up to the full size of the button. -->
-    <item>
-        <bitmap android:src="@drawable/ic_hold_pause_holo_dark"
-                android:gravity="center" />
-    </item>
-
-</layer-list>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item
+        android:drawable="@drawable/ic_hold_pause_holo_dark_checked_true"
+        android:state_pressed="true"/>
+    <item
+        android:drawable="@drawable/list_focused_holo"
+        android:state_focused="true"/>
+    <item
+        android:drawable="@drawable/ic_hold_pause_holo_dark_checked_true"
+        android:state_checked="true"/>
+    <item
+        android:drawable="@drawable/ic_hold_pause_holo_dark"
+        android:state_checked="false"/>
+    <item android:drawable="@drawable/ic_hold_pause_holo_dark"/>
+</selector>

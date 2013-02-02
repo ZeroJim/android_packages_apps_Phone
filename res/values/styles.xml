@@ -106,7 +106,7 @@
         <item name="android:layout_width">0px</item>
         <item name="android:layout_height">@dimen/in_call_button_height</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+
     </style>
 
     <!-- "Compound button" variation of InCallButton.
@@ -128,8 +128,8 @@
     <!-- "End" button; similar to InCallButton. -->
     <style name="InCallEndButton">
         <item name="android:layout_width">0dip</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="android:layout_height">@dimen/in_call_end_button_height</item>
-        <item name="android:background">@drawable/dial_background_image</item>
     </style>
 
     <!-- Buttons in extra button row. -->
@@ -202,10 +202,9 @@
     </style>
 
     <style name="DialpadButtonStyle">
-        <item name="android:layout_width">0dip</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:layout_width">@dimen/incall_touch_dialpad_button_width</item>
+        <item name="android:layout_height">@dimen/incall_touch_dialpad_button_height</item>
+        <item name="android:background">@drawable/dialpad_button_selector</item>
         <item name="android:soundEffectsEnabled">false</item>
     </style>
 

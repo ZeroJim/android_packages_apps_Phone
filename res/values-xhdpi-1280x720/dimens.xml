@@ -16,4 +16,13 @@
 <resources>
     <!-- shutao 2012-11-29  -->
     <dimen name="incall_touch_ui_endbutton_lift">107dp</dimen>
+    <dimen name="incall_touch_ui_endbutton_marginLeft">24dp</dimen>
+    <dimen name="incall_touch_ui_endbutton_marginRight">24dp</dimen>
+    <dimen name="incall_touch_ui_endbutton_marginBottom">27dp</dimen>
+    <dimen name="incall_touch_ui_bottom_ui_height">185dip</dimen>
+    <dimen name="incall_touch_dialpad_button_height">60dip</dimen>
+    <dimen name="incall_touch_dialpad_button_width">106dip</dimen>
+    <dimen name="incall_touch_dialpad_button_margin">6dip</dimen>
+    <dimen name="incall_touch_dialpad_men_height">77dip</dimen>
+    <dimen name="in_call_end_button_height">108dp</dimen>
 </resources>
