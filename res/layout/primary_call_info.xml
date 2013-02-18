@@ -52,6 +52,7 @@
          android:layout_width="match_parent"
          android:layout_height="match_parent"
          android:background="@color/on_hold_dim_effect"
+         android:layout_marginBottom="@dimen/dim_effect_for_primary_photo_marginBottom"
          android:visibility="gone" />
 
     <!-- "Call Banner" for primary call, the foregound or ringing call.
