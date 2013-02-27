@@ -125,7 +125,7 @@
                     
                     android:contentDescription="@string/onscreenAudioText"
                     android:text="@string/onscreenAudioText"
-                    android:textColor="@color/incall_touch_ui_text_color_selector"
+
                     />
 <!-- android:background="@drawable/btn_compound_audio" -->
                 <!-- Separator between 2nd and 3rd button -->
@@ -138,7 +138,7 @@
                     android:background="@drawable/btn_compound_mute"
                     android:contentDescription="@string/onscreenMuteText"
                     android:text="@string/onscreenMuteText"
-                    android:textColor="@color/incall_touch_ui_text_color_selector"
+
                     />
 
                 <!-- Separator between 3rd and 4th button -->
@@ -154,7 +154,7 @@
                     android:background="@drawable/btn_compound_hold"
                     android:contentDescription="@string/onscreenHoldText"
                     android:text="@string/onscreenHoldText"
-                    android:textColor="@color/incall_touch_ui_text_color_selector"
+
                     />
                 <!-- "Swap" (or "Manage calls" in some CDMA states) -->
                 <Button android:id="@+id/swapButton"
