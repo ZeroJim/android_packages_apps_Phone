@@ -21,11 +21,13 @@
      here are both "match_parent"), but we manually adjust its bottom margin
      in CallCard.updateCallInfoLayout() to make sure it doesn't overlap with
      the onscreen buttons from incall_touch_ui.xml. -->
-<com.android.phone.CallCard xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.phone.CallCard 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/shendu_phone_preview_bg"
     android:orientation="vertical">
+    
     <!-- Contact photo for primary call info -->
     <ImageView android:id="@+id/photo"
          android:layout_alignParentLeft="true"

@@ -26,4 +26,11 @@
     <dimen name="incall_touch_dialpad_men_height">77dip</dimen>
     <dimen name="in_call_end_button_height">108dp</dimen>
     <dimen name="dim_effect_for_primary_photo_marginBottom">8.5dp</dimen>
+    <dimen name="dialpad_height">276dp</dimen>
+    <dimen name="dialpad_marginBottom">10dip</dimen>
+    <dimen name="dialpad_vertical_margin">2dp</dimen>
+    <dimen name="dialpad_paddingTop">10dip</dimen>
+    <dimen name="dtmfDialerField_marginTop">10dip</dimen>
+    <dimen name="dtmfDialerField_marginBottom">5dip</dimen>
+    <dimen name="dtmfDialerField_height">32dip</dimen>
 </resources>

@@ -41,8 +41,6 @@
     <!-- Height of the main row of in-call buttons. -->
     <dimen name="in_call_button_height">65dp</dimen>
 
-    <!-- Height of the in-call "End" button. -->
-    <dimen name="in_call_end_button_height">108dp</dimen>
 
     <!-- Width of buttons in the extra button row. -->
     <dimen name="extra_row_button_width">56dp</dimen>
@@ -67,7 +65,7 @@
 
     <!-- Dimensions for Emergency Dialer and dialpad inside the in-call screen -->
     <dimen name="dialpad_horizontal_margin">4dp</dimen>
-    <dimen name="dialpad_vertical_margin">2dp</dimen>
+    <dimen name="dialpad_vertical_margin">0dp</dimen>
     <dimen name="dialpad_digits_text_size">35sp</dimen>
     <!-- Just used in landscape mode -->
     <dimen name="emergency_dialer_digits_height">0px</dimen>
@@ -107,5 +105,25 @@
     
     <!-- shutao 2012-11-29  -->
     <dimen name="incall_touch_ui_endbutton_lift">87dp</dimen>
+    <dimen name="incall_touch_ui_endbutton_marginLeft">24dp</dimen>
+    <dimen name="incall_touch_ui_endbutton_marginRight">24dp</dimen>
+    <dimen name="incall_touch_ui_endbutton_marginBottom">27dp</dimen>
+    <dimen name="incall_touch_ui_bottom_ui_height">139dip</dimen>
+    <dimen name="incall_touch_dialpad_button_height">54dip</dimen>
+    <dimen name="incall_touch_dialpad_button_width">92dip</dimen>
+    <dimen name="incall_touch_dialpad_button_margin">2dip</dimen>
+    <dimen name="incall_touch_dialpad_men_height">71dip</dimen>
+        <!-- Height of the in-call "End" button. -->
+    <dimen name="in_call_end_button_height">68dp</dimen>
+
+    <dimen name="dim_effect_for_primary_photo_marginBottom">8.5dp</dimen>
+    
+    <dimen name="dialpad_height">244dp</dimen>
+    <dimen name="dialpad_marginBottom">5dip</dimen>
+    <dimen name="dialpad_paddingTop">8dip</dimen>
+    <dimen name="dtmfDialerField_marginTop">5dip</dimen>
+    <dimen name="dtmfDialerField_marginBottom">2dip</dimen>
+    <dimen name="dtmfDialerField_height">28dip</dimen>
+    <!-- shutao 2013-2-28 -->
     
 </resources>

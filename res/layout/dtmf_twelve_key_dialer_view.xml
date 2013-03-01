@@ -44,9 +44,9 @@
     <EditText
         android:id="@+id/dtmfDialerField"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="5dp"
+        android:layout_height="@dimen/dtmfDialerField_height"
+        android:layout_marginTop="@dimen/dtmfDialerField_marginTop"
+        android:layout_marginBottom="@dimen/dtmfDialerField_marginBottom"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
         android:paddingRight="16dp"

@@ -19,7 +19,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <!-- The standard "compound button" background. -->
-
     <item
         android:drawable="@drawable/ic_mute_holo_dark_checked_true"
         android:state_pressed="true"/>
