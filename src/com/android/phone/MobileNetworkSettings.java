@@ -337,6 +337,8 @@ public class MobileNetworkSettings extends PreferenceActivity
         }
         mDataUsageListener.resume();
         getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_bg));
+        getActionBar().setDisplayShowHomeEnabled(false);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
