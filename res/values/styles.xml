@@ -160,8 +160,8 @@
         <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
     
-     <style name="Theme.Settings.MobileNetworkSettings" parent="@android:style/Theme.Holo.Light">
-    	<item name="android:actionBarStyle">@*android:style/Widget.Holo.Light.ActionBar</item>
+     <style name="Theme.Settings.MobileNetworkSettings" parent="@android:style/Theme.Holo">
+    	<!-- item name="android:actionBarStyle">@*android:style/Widget.Holo.ActionBar</item-->
     </style>
 
     <style name="InCallAnimationStyle" parent="@*android:style/Animation.Holo.Activity">

@@ -215,6 +215,7 @@ public class MobileNetworkSettings extends PreferenceActivity
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        setIsShenDu(true);
 
         addPreferencesFromResource(R.xml.network_setting);
 
@@ -335,6 +336,7 @@ public class MobileNetworkSettings extends PreferenceActivity
                     MyHandler.MESSAGE_GET_PREFERRED_NETWORK_TYPE));
         }
         mDataUsageListener.resume();
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_bg));
     }
 
     @Override
