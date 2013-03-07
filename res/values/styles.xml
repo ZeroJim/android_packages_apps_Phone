@@ -160,7 +160,7 @@
         <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
     
-     <style name="Theme.Settings.MobileNetworkSettings" parent="@android:style/Theme.Holo.Light">
+     <style name="Theme.Settings.MobileNetworkSettings" parent="@android:style/Theme.Holo">
     	<item name="android:actionBarStyle">@style/mMobileNetworkActionBarStyle</item>
     	<item name="android:windowBackground">@drawable/comversation_bg</item>
      </style>
