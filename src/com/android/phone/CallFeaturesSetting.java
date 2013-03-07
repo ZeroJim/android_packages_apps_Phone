@@ -1507,12 +1507,13 @@ public class CallFeaturesSetting extends PreferenceActivity
 
     @Override
     protected void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    	setIsShenDu(true,true);
+    	super.onCreate(icicle);
+      
         if (DBG) log("onCreate(). Intent: " + getIntent());
         mPhone = PhoneApp.getPhone();
-
         addPreferencesFromResource(R.xml.call_feature_setting);
-
+        
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         // get buttons

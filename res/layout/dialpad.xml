@@ -31,7 +31,7 @@
         android:layout_height="@dimen/dialpad_height"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dialpad_vertical_margin"
-        android:background="@drawable/dial_background_texture"
+        android:background="@drawable/shendu_dial_background_texture"
         android:paddingTop="@dimen/dialpad_paddingTop"
         android:paddingBottom="@dimen/dialpad_marginBottom"
         android:paddingLeft="19dip"
