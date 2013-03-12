@@ -29,6 +29,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.media.AudioManager;
@@ -57,13 +58,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.ListAdapter;
-
+import android.widget.TextView;
 import com.android.internal.telephony.CallForwardInfo;
 import com.android.internal.telephony.CommandsInterface;
 import com.android.internal.telephony.Phone;
 import com.android.internal.telephony.cdma.TtyIntent;
 import com.android.phone.sip.SipSharedPreferences;
-
+import com.android.phone.R;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1685,9 +1686,14 @@ public class CallFeaturesSetting extends PreferenceActivity
         };
 
         ActionBar actionBar = getActionBar();
+        int titleId = Resources.getSystem().getIdentifier(  
+                "action_bar_title", "id", "android");  
+        TextView mShendu_title = (TextView) findViewById(titleId);
+        mShendu_title.setTextColor(getResources().getColor(R.color.shendu_conversation_title_text_color));
         if (actionBar != null) {
             // android.R.id.home will be triggered in onOptionsItemSelected()
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(false);
         }
     }
 

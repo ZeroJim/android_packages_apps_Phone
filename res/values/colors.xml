@@ -36,4 +36,6 @@
     
     <color name="mobile_setting_background">#fff5f5f5</color>
     <color name="incalltouchui_botton_text_color">#ffd7d0d0</color>
+    <!-- shutao 2013-3-7 -->
+    <color name="shendu_conversation_title_text_color">#ffc7c7c7</color>
 </resources>
