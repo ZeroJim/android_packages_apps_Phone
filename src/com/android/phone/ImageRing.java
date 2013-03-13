@@ -97,21 +97,16 @@ public class ImageRing extends View {
 		init(a);
 		a.recycle();
 	}
-
 	public ImageRing(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		TypedArray a = context.obtainStyledAttributes(attrs,R.styleable.ImageRing);
-		init(a);
-		a.recycle();
+		this(context, attrs,0);
 	}
-	public ImageRing(Context context){
-		super(context);
-	}
+	
 	private Handler mHander = new Handler(){
 		@Override
 		public void handleMessage(Message msg) {
 			switch(msg.what){
 			case OK:
+				log("mHander handleMessage init ok");
 				init = true;
 				reset();
 				ImageRing.this.invalidate();
@@ -122,6 +117,7 @@ public class ImageRing extends View {
 	};
 
 	private void init(TypedArray mTypeArray) {
+		log("init()");
 		isImageMove = false;
 		posHold[0] = posHold[1] = 0;
 		posFix[0] = posFix[1] = 0;
@@ -155,12 +151,13 @@ public class ImageRing extends View {
 	private Runnable backgroundLoad = new Runnable(){
 		@Override
 		public void run() {
+		
 			imageRectF = new RectF();
-			headBgRectF = new RectF();
-			headBgLightRectF = new RectF();
 			headTopRectF = new RectF();
 			answerRectF = new RectF();
 			refuseRectF = new RectF();
+			headBgRectF = new RectF();
+			headBgLightRectF = new RectF();
 			
 			loadAllBitmap();
 			
@@ -168,25 +165,38 @@ public class ImageRing extends View {
 			itemList.add(new RingItem(answer	,answer	,1,-1,OnTriggerListener.ANSWER));		// right
 			itemList.add(new RingItem(refuse	,refuse	,-1	,-1,OnTriggerListener.REFUSE));		// left
 			mHander.sendEmptyMessage(OK);
+			log("mHander sendEmptyMessage(OK)");
+		}
+	};
+	private Runnable bitmapLoad = new Runnable(){
+		public void run(){
+			loadAllBitmap();
 		}
 	};
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
+		boolean needLoad = false;
 		//canvas.drawLine(0, 0, this.getWidth(), 0, mPaint);
 		//canvas.drawLine(0, 0, 0, this.getHeight(), mPaint);
 		//canvas.drawLine(this.getWidth(), 0, this.getWidth(), this.getHeight(), mPaint);
 		//canvas.drawLine(0, this.getHeight(), this.getWidth(), this.getHeight(), mPaint);
 		if(!init){
 			canvas.drawText("please wait", this.getWidth()>>1, this.getHeight()>>1, mPaint);
+			log("err!!    init fail   ===== return");
 			return;
 		}
 		if(answer!=null){
 			canvas.drawBitmap(answer, answerRectF.left, answerRectF.top, mPaint);// 接听
+		}else{
+			needLoad = true;
 		}
+		
 		if(refuse!=null){
 			canvas.drawBitmap(refuse, refuseRectF.left, refuseRectF.top, mPaint);//挂断
+		}else{
+			needLoad = true;
 		}
 		
 		if(isImageMove){
@@ -207,17 +217,32 @@ public class ImageRing extends View {
 				mPaint.setAlpha(bgAlpha);
 				canvas.drawBitmap(imageBgLight, headBgLightRectF.left, headBgLightRectF.top, mPaint);	// 背景
 				mPaint.setAlpha(alpha);
+			}else{
+				needLoad = true;
+				log("====err! imageBackgroundLight is null!!!");
 			}
 			if(imageBg!=null){
 				canvas.drawBitmap(imageBg, headBgRectF.left, headBgRectF.top, mPaint);	// 白色背景
+			}else{
+				needLoad = true;
+				log("====err! imageBackgroundWidth is null!!!");
 			}
 			if(holderImage!=null){
 				canvas.drawBitmap(holderImage, imageRectF.left, imageRectF.top, mPaint);		// 头像
+			}else{
+				needLoad = true;
+				log("====err! imageHolder is null!!!");
 			}
 			if(imageTop!=null){
 				canvas.drawBitmap(imageTop, headTopRectF.left, headTopRectF.top, mPaint);//半透明层
+			}else{
+				needLoad = true;
+				log("====err! imageTop is null!!!");
 			}
 		}
+		
+		if(needLoad && exec!=null)
+			exec.execute(bitmapLoad);
 		
 	}
 	
@@ -257,7 +282,7 @@ public class ImageRing extends View {
 	}
 	//----------------------------//
 	private void actionUp(MotionEvent event) {
-		log("actionUp");
+		log("actionUp()");
 		boolean isActive = false;
 		if(mOnTriggerListener!=null){
 			RingItem holder = null;
@@ -270,14 +295,14 @@ public class ImageRing extends View {
 			}
 			if(holder!=null && mOnTriggerListener!=null){
 				mOnTriggerListener.onTrigger(holder.funType);
-				release();
+				//release();
 			}
 		}
-		if(!isActive){
+		//if(!isActive){
 			isImageMove = false;
 			posHold[0] = posHold[1] = 0;
 			posFix[0] = posFix[1] = 0;
-		}
+		//}
 	}
 	//----------------------------//
 	private void actionMove(MotionEvent event){
@@ -311,7 +336,6 @@ public class ImageRing extends View {
 				posFix[0] = ri.position * ringOffset;
 				log("active: "+ri.funType);
 			}
-			log("("+posFix[0]+")["+ri.cenX+"]");
 		}
 		
 		
@@ -325,6 +349,7 @@ public class ImageRing extends View {
 	}
 	
 	public void reset(){
+		log(" on reset ("+this.getWidth()+","+this.getHeight()+")");
 		centPoint[0] = (this.getWidth()>0)? (this.getWidth()>>1) : (centPoint[0]);
 		centPoint[1] = (this.getHeight()>0)? (this.getHeight()>>1) : (centPoint[1]);
 		
@@ -334,10 +359,10 @@ public class ImageRing extends View {
 		}
 		if(!init) return;
 		if(holderImage!=null)
-		imageRectF.set(centPoint[0]-(holderImage.getWidth()>>1),
-				centPoint[1]-(holderImage.getHeight()>>1), 
-				centPoint[0]+(holderImage.getWidth()>>1),
-				centPoint[1]+(holderImage.getHeight()>>1));
+			imageRectF.set(centPoint[0]-(holderImage.getWidth()>>1),
+					centPoint[1]-(holderImage.getHeight()>>1), 
+					centPoint[0]+(holderImage.getWidth()>>1),
+					centPoint[1]+(holderImage.getHeight()>>1));
 		if(imageBg!=null)
 			headBgRectF.set(centPoint[0]-(imageBg.getWidth()>>1),
 					centPoint[1]-(imageBg.getHeight()>>1),
@@ -371,14 +396,15 @@ public class ImageRing extends View {
 	}
 	
 	private void loadAllBitmap(){
-		imageBgLight = loadDrawable(imageBgLightId);
-		imageBg = loadDrawable(imageBgId);
-		imageTop = loadDrawable(imageTopId);
+		log("loadAllBitmap()");
+		if(imageBgLight==null)	imageBgLight = loadDrawable(imageBgLightId);
+		if(imageBg==null)	imageBg = loadDrawable(imageBgId);
+		if(imageTop==null)	imageTop = loadDrawable(imageTopId);
 		
 		
-		holderImage = loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_head);
-		answer = loadDrawable(answerId);
-		refuse = loadDrawable(refuseId);
+		if(holderImage==null)	holderImage = loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_header);
+		if(answer==null)	answer = loadDrawable(answerId);
+		if(refuse==null)	refuse = loadDrawable(refuseId);
 		reset();
 	}
 	private Bitmap loadDrawable(int rId){
@@ -392,6 +418,7 @@ public class ImageRing extends View {
     }
 	
 	private void release(){
+		log("release()");
 		if(imageBg!=null){
 			imageBg.recycle();
 			imageBg = null;
@@ -407,6 +434,14 @@ public class ImageRing extends View {
 		if(holderImage!=null){
 			holderImage.recycle();
 			holderImage = null;
+		}
+		if(answer!=null){
+			answer.recycle();
+			answer = null;
+		}
+		if(refuse!=null){
+			refuse.recycle();
+			refuse = null;
 		}
 	}
 	///////////////////////////////////////////////////sure //////////////////////////////////////////////////////////
@@ -464,7 +499,6 @@ public class ImageRing extends View {
 	private static final String[]  project = new String[]{Phone._ID, Phone.PHOTO_THUMBNAIL_URI, Phone.NUMBER};
 									
 	private Bitmap getHolderImage(String number){
-		log("getHolderImage: "+number);
 		Bitmap bitmap = null;
 		if(number!=null){
 			Cursor c = this.getContext().getContentResolver()
@@ -473,7 +507,6 @@ public class ImageRing extends View {
 				if(c.moveToFirst()&&c.getString(1)!=null){
 					Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, c.getLong(0)); 
 					InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(this.getContext().getContentResolver(), uri,true); 
-					log("input: "+input +"  uri: "+uri + " number: " +number);
 					bitmap = BitmapFactory.decodeStream(input);
 				}
 				c.close();
@@ -483,16 +516,13 @@ public class ImageRing extends View {
 			return toRoundBitmap(bitmap,mImageRadius);
 		else
 			log("bitmap==null  number: "+number);	
-		return loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_head);
+		return loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_header);
 	}
 	private Bitmap getHolderImage(Uri uri){
-		log("getHolderImage:"+ uri.getPath());
 		Bitmap bitmap = null;
 		if(uri!=null){
 			InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(this.getContext().getContentResolver(), uri,true); 
-			log("input: "+input +"  uri: "+uri + "  uri.path:"+uri.getPath());
 			bitmap = BitmapFactory.decodeStream(input);
-			log("bitmap decoder end: "+bitmap);
 		}
 		
 		if(bitmap!=null)
@@ -500,11 +530,12 @@ public class ImageRing extends View {
 		else
 			log("bitmap==null uri: "+uri);
 			
-		return loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_head);
+		return loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_header);
 	}
 	
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		log("onMeasure");
 		int minimumWidth = mImageRadius<<1;
 		int minimumHeight = minimumWidth+199;
 		int computedWidth = resolveMeasured(widthMeasureSpec, minimumWidth);
@@ -534,7 +565,6 @@ public class ImageRing extends View {
 	static PorterDuffXfermode porterDuffXfermode = new PorterDuffXfermode(Mode.SRC_IN);
 	
 	public static Bitmap toRoundBitmap(Bitmap bitmap, float radius) {
-	log("toRoundBitmap:: "+bitmap);
 		if (radius <= 0){
 			Log.e(VIEW_LOG_TAG, "radius="+radius);
 			return null;
@@ -588,7 +618,6 @@ public class ImageRing extends View {
 		bitmap.recycle();
 
 		int w_h = (int) (radius * 2);
-		log("toRoundBitmap:output: "+output);
 		return Bitmap.createScaledBitmap(output, w_h, w_h, true);
 	}
 	

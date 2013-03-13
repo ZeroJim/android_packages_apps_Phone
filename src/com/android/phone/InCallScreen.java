@@ -81,8 +81,8 @@ public class InCallScreen extends Activity
         implements View.OnClickListener {
     private static final String LOG_TAG = "InCallScreen";
 
-    private static final boolean DBG =
-            (PhoneApp.DBG_LEVEL >= 1) && (SystemProperties.getInt("ro.debuggable", 0) == 1);
+    private static final boolean DBG =true;
+            //(PhoneApp.DBG_LEVEL >= 1) && (SystemProperties.getInt("ro.debuggable", 0) == 1);
     private static final boolean VDBG = (PhoneApp.DBG_LEVEL >= 2);
 
     /**

@@ -1602,7 +1602,7 @@ public class CallCard extends FrameLayout
 
     /** Helper function to display the drawable in the imageview AND ensure its visibility.*/
     private static final void showImage(ImageView view, Drawable drawable) {
-        Resources res = view.getContext().getResources();
+/*        Resources res = view.getContext().getResources();
         Drawable current = (Drawable) view.getTag();
         if (current == null) {
             if (DBG) log("Start fade-in animation for " + view);
@@ -1612,7 +1612,7 @@ public class CallCard extends FrameLayout
         } else {
             AnimationUtils.startCrossFade(view, current, drawable);
             view.setVisibility(View.VISIBLE);
-        }
+        }*/
     }
 
     /**
