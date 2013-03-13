@@ -251,4 +251,9 @@
     <style name="Theme.Settings" parent="@android:style/Theme.Holo.Light">
     	<item name="android:actionBarStyle">@*android:style/Widget.Holo.Light.ActionBar</item>
     </style>
+
+    <style name="Theme.ShenDu" parent="@android:style/Theme.Holo">
+        <item name="android:actionBarStyle">@*android:style/Widget.Holo.ActionBar</item>
+        <item name="android:windowBackground">@*android:drawable/shendu_listview_bg</item>
+    </style>
 </resources>
