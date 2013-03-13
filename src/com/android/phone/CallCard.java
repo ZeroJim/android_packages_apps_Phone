@@ -1224,7 +1224,7 @@ public class CallCard extends FrameLayout
             if ((number != null) && number.startsWith("sip:")) {
                 number = number.substring(4);
             }
-
+			
             if (TextUtils.isEmpty(info.name)) {
                 // No valid "name" in the CallerInfo, so fall back to
                 // something else.
@@ -1290,6 +1290,8 @@ public class CallCard extends FrameLayout
                 }
             }
             personUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, info.person_id);
+            mInCallScreen.getInCallTouchUi().getIncomingCallWidget().setInComingUri(personUri);
+            mInCallScreen.getInCallTouchUi().getIncomingCallWidget().setInComingNumber(number.replaceAll(" ", ""));
             if (DBG) log("- got personUri: '" + personUri
                          + "', based on info.person_id: " + info.person_id);
         } else {

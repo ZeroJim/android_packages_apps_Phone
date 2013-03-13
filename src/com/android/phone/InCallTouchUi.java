@@ -47,8 +47,7 @@ import android.widget.Toast;
 import com.android.internal.telephony.Call;
 import com.android.internal.telephony.CallManager;
 import com.android.internal.telephony.Phone;
-import com.android.internal.widget.multiwaveview.GlowPadView;
-import com.android.internal.widget.multiwaveview.GlowPadView.OnTriggerListener;
+import com.android.phone.ImageRing.OnTriggerListener;
 import com.android.phone.InCallUiState.InCallScreenMode;
 
 /**
@@ -79,7 +78,7 @@ public class InCallTouchUi extends FrameLayout
     private PhoneApp mApp;
 
     // UI containers / elements
-    private GlowPadView mIncomingCallWidget;  // UI used for an incoming call
+    private ImageRing mIncomingCallWidget;  // UI used for an incoming call
     private boolean mIncomingCallWidgetIsFadingOut;
     private boolean mIncomingCallWidgetShouldBeReset = true;
 
@@ -157,7 +156,7 @@ public class InCallTouchUi extends FrameLayout
         // Look up the various UI elements.
 
         // "Drag-to-answer" widget for incoming calls.
-        mIncomingCallWidget = (GlowPadView) findViewById(R.id.incomingCallWidget);
+        mIncomingCallWidget = (ImageRing) findViewById(R.id.incomingCallWidget);
         mIncomingCallWidget.setOnTriggerListener(this);
 
         // Container for the UI elements shown while on a regular call.
@@ -965,7 +964,7 @@ public class InCallTouchUi extends FrameLayout
     }
 
 
-    //
+/*    //
     // GlowPadView.OnTriggerListener implementation
     //
 
@@ -978,13 +977,13 @@ public class InCallTouchUi extends FrameLayout
     public void onReleased(View v, int handle) {
 
     }
-
+*/
     /**
      * Handles "Answer" and "Reject" actions for an incoming call.
      * We get this callback from the incoming call widget
      * when the user triggers an action.
      */
-    @Override
+/*    @Override
     public void onTrigger(View view, int whichHandle) {
         if (DBG) log("onTrigger(whichHandle = " + whichHandle + ")...");
 
@@ -1065,10 +1064,54 @@ public class InCallTouchUi extends FrameLayout
         // the hint text we were displaying while the user was dragging.
         mInCallScreen.updateIncomingCallWidgetHint(0, 0);
     }
+*/
+	    public void onTrigger(int whichHandle) {
+        if (DBG) log("onTrigger(whichHandle = " + whichHandle + ")...");
 
-    public void onFinishFinalAnimation() {
-        // Not used
+        if (mInCallScreen == null) {
+            Log.wtf(LOG_TAG, "onTrigger(" + whichHandle
+                    + ") from incoming-call widget, but null mInCallScreen!");
+            return;
+        }
+
+        // The InCallScreen actually implements all of these actions.
+        // Each possible action from the incoming call widget corresponds
+        // to an R.id value; we pass those to the InCallScreen's "button
+        // click" handler (even though the UI elements aren't actually
+        // buttons; see InCallScreen.handleOnscreenButtonClick().)
+
+        mShowInCallControlsDuringHidingAnimation = false;
+        switch (whichHandle) {
+        	case OnTriggerListener.ANSWER:
+            case ANSWER_CALL_ID:
+                if (DBG) log("ANSWER_CALL_ID: answer!");
+                mInCallScreen.handleOnscreenButtonClick(R.id.incomingCallAnswer);
+                mShowInCallControlsDuringHidingAnimation = true;
+
+                // ...and also prevent it from reappearing right away.
+                // (This covers up a slow response from the radio for some
+                // actions; see updateState().)
+                mLastIncomingCallActionTime = SystemClock.uptimeMillis();
+                break;
+			case OnTriggerListener.REFUSE:
+            case DECLINE_CALL_ID:
+                if (DBG) log("DECLINE_CALL_ID: reject!");
+                mInCallScreen.handleOnscreenButtonClick(R.id.incomingCallReject);
+
+                // Same as "answer" case.
+                mLastIncomingCallActionTime = SystemClock.uptimeMillis();
+                break;
+
+            default:
+                Log.wtf(LOG_TAG, "onDialTrigger: unexpected whichHandle value: " + whichHandle);
+                break;
+        }
+
+        hideIncomingCallWidget();
+        mInCallScreen.updateIncomingCallWidgetHint(0, 0);
     }
+    
+//    public void onFinishFinalAnimation() {}
 
     /**
      * Apply an animation to hide the incoming call widget.
@@ -1143,7 +1186,7 @@ public class InCallTouchUi extends FrameLayout
         // the ringing call.  (Specifically, we need to disable the
         // "respond via SMS" option for certain types of calls, like SIP
         // addresses or numbers with blocked caller-id.)
-        final boolean allowRespondViaSms =
+      /*  final boolean allowRespondViaSms =
                 RespondViaSmsManager.allowRespondViaSmsForCall(mInCallScreen, ringingCall);
         final int targetResourceId = allowRespondViaSms
                 ? R.array.incoming_call_widget_3way_targets
@@ -1180,7 +1223,7 @@ public class InCallTouchUi extends FrameLayout
             mIncomingCallWidget.reset(false);
             mIncomingCallWidgetShouldBeReset = false;
         }
-
+		*/
         mIncomingCallWidget.setVisibility(View.VISIBLE);
 
         // Finally, manually trigger a "ping" animation.
@@ -1212,7 +1255,7 @@ public class InCallTouchUi extends FrameLayout
      * one handle, so for now we don't display a hint at all (see the TODO
      * comment below.)
      */
-    @Override
+ /*   @Override
     public void onGrabbedStateChange(View v, int grabbedState) {
         if (mInCallScreen != null) {
             // Look up the hint based on which handle is currently grabbed.
@@ -1239,7 +1282,7 @@ public class InCallTouchUi extends FrameLayout
             mInCallScreen.updateIncomingCallWidgetHint(hintTextResId, hintColorResId);
         }
     }
-
+*/
     /**
      * Handles an incoming RING event from the telephony layer.
      */
@@ -1286,8 +1329,8 @@ public class InCallTouchUi extends FrameLayout
         }
 
         // Ok, run a ping (and schedule the next one too, if desired...)
-        mIncomingCallWidget.showRingTar();
-        mIncomingCallWidget.ping();
+        //mIncomingCallWidget.showRingTar();
+        //mIncomingCallWidget.ping();
 
         if (ENABLE_PING_AUTO_REPEAT) {
             // Schedule the next ping.  (ENABLE_PING_AUTO_REPEAT mode
@@ -1310,6 +1353,10 @@ public class InCallTouchUi extends FrameLayout
             mHandler.sendEmptyMessageDelayed(INCOMING_CALL_WIDGET_PING,
                                              PING_AUTO_REPEAT_DELAY_MSEC);
         }
+    }
+    
+    ImageRing getIncomingCallWidget(){
+    	return mIncomingCallWidget;
     }
 
     // Debugging / testing code

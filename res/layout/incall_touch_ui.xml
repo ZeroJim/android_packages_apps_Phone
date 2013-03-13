@@ -27,7 +27,7 @@
      inCallControls beneath incomingCallWidget for smoother transition.
      -->
 <com.android.phone.InCallTouchUi xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:prvandroid="http://schemas.android.com/apk/prv/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.android.phone"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -239,15 +239,17 @@
               don't have an icon in the downward direction so the whole
               bottom area of this widget is just wasted space.
     -->
+ 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center|bottom"
         android:orientation="vertical"
         android:gravity="bottom"
-        android:background="@color/incall_call_banner_background" 
+        android:background="#ffbf0f0f"
        >
-<!--  android:background="@color/incall_call_banner_background" -->
+  <!--
+  android:background="@color/incall_call_banner_background" 
     <com.android.internal.widget.multiwaveview.GlowPadView
         android:id="@+id/incomingCallWidget"
         android:layout_width="wrap_content"
@@ -272,6 +274,27 @@
         prvandroid:glowRadius="@*android:dimen/glowpadview_glow_radius"
         prvandroid:pointDrawable="@*android:drawable/ic_lockscreen_glowdot"
         />
-    </FrameLayout>
-
+        
+         -->
+    <com.android.phone.ImageRing
+	    android:id="@+id/incomingCallWidget"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="bottom"
+	    android:gravity="bottom"
+	    android:visibility="gone"
+	    android:background="@drawable/ic_call_bg"
+	    android:layout_marginBottom="@dimen/imagering_margin_bottom"
+	    app:defaultImage="@drawable/default_head"
+	    app:imageBg="@drawable/ic_header_bg"
+	    app:imageBgLight="@drawable/ic_header_bg_hl"
+	    app:imageTop="@drawable/ic_header_top"
+	    app:answer="@drawable/ic_answer"
+	    app:refuse="@drawable/ic_refuse"
+	    app:radius="52dp"
+	    app:bigRadius="@dimen/imagering_ring_big_radius"
+	    app:ringOffset="@dimen/imagering_ring_offset"
+	    app:vibrateDuration="20" 
+	    />
+	   </FrameLayout> 
 </com.android.phone.InCallTouchUi>

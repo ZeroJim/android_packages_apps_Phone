@@ -49,4 +49,16 @@
             <enum name="not_reachable" value="3" />
         </attr>
     </declare-styleable>
+     <declare-styleable name="ImageRing">
+        <attr name="radius" format="dimension"/>
+        <attr name="bigRadius" format="dimension"/>
+        <attr name="ringOffset" format="dimension"/>
+        <attr name="vibrateDuration" format="integer"/>
+        <attr name="defaultImage" format="reference"/>
+        <attr name="imageBg" format="reference"/>
+        <attr name="imageBgLight" format="reference"/>
+        <attr name="imageTop" format="reference"/>
+        <attr name="answer" format="reference"/>
+        <attr name="refuse" format="reference"/>
+    </declare-styleable>
 </resources>
