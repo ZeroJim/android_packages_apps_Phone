@@ -165,6 +165,10 @@ public class ImageRing extends View {
 			itemList.add(new RingItem(answer	,answer	,1,-1,OnTriggerListener.ANSWER));		// right
 			itemList.add(new RingItem(refuse	,refuse	,-1	,-1,OnTriggerListener.REFUSE));		// left
 			mHander.sendEmptyMessage(OK);
+			init = true;
+			reset();
+			ImageRing.this.postInvalidate();
+			exec.execute(bgRunnable);
 			log("mHander sendEmptyMessage(OK)");
 		}
 	};
@@ -178,10 +182,6 @@ public class ImageRing extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		boolean needLoad = false;
-		//canvas.drawLine(0, 0, this.getWidth(), 0, mPaint);
-		//canvas.drawLine(0, 0, 0, this.getHeight(), mPaint);
-		//canvas.drawLine(this.getWidth(), 0, this.getWidth(), this.getHeight(), mPaint);
-		//canvas.drawLine(0, this.getHeight(), this.getWidth(), this.getHeight(), mPaint);
 		if(!init){
 			canvas.drawText("please wait", this.getWidth()>>1, this.getHeight()>>1, mPaint);
 			log("err!!    init fail   ===== return");
@@ -295,6 +295,7 @@ public class ImageRing extends View {
 			}
 			if(holder!=null && mOnTriggerListener!=null){
 				mOnTriggerListener.onTrigger(holder.funType);
+				holder.isActive = false;
 				//release();
 			}
 		}
@@ -351,7 +352,7 @@ public class ImageRing extends View {
 	public void reset(){
 		log(" on reset ("+this.getWidth()+","+this.getHeight()+")");
 		centPoint[0] = (this.getWidth()>0)? (this.getWidth()>>1) : (centPoint[0]);
-		centPoint[1] = (this.getHeight()>0)? (this.getHeight()>>1) : (centPoint[1]);
+		centPoint[1] = (this.getHeight()>0 && this.getHeight()<500)? (this.getHeight()>>1) : (centPoint[1]);
 		
 		if(itemList!=null && itemList.size()>0)
 		for(RingItem ri:itemList){
@@ -408,7 +409,9 @@ public class ImageRing extends View {
 		reset();
 	}
 	private Bitmap loadDrawable(int rId){
-		return BitmapFactory.decodeResource(this.getResources(), rId);
+		Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), rId);
+		bitmap.prepareToDraw();
+		return bitmap;
 	}
 	private int getResourceId(TypedArray mTypeArray, int id) {
         TypedValue tv = null;
@@ -536,8 +539,8 @@ public class ImageRing extends View {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		log("onMeasure");
-		int minimumWidth = mImageRadius<<1;
-		int minimumHeight = minimumWidth+199;
+		int minimumHeight = (mImageRadius+25)<<1;
+		int minimumWidth = minimumHeight + 100;
 		int computedWidth = resolveMeasured(widthMeasureSpec, minimumWidth);
        int computedHeight = resolveMeasured(heightMeasureSpec, minimumHeight);
         log("onMeasure["+widthMeasureSpec+","+heightMeasureSpec+"]:["+computedWidth+","+computedHeight+"]");
@@ -618,7 +621,9 @@ public class ImageRing extends View {
 		bitmap.recycle();
 
 		int w_h = (int) (radius * 2);
-		return Bitmap.createScaledBitmap(output, w_h, w_h, true);
+		bitmap = Bitmap.createScaledBitmap(output, w_h, w_h, true);
+		bitmap.prepareToDraw();
+		return bitmap;
 	}
 	
 	public static void log(String msg){
