@@ -539,8 +539,8 @@ public class ImageRing extends View {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		log("onMeasure");
-		int minimumHeight = (mImageRadius+25)<<1;
-		int minimumWidth = minimumHeight + 100;
+		int minimumHeight = (mImageRadius+40)<<1;
+		int minimumWidth = minimumHeight + 50;
 		int computedWidth = resolveMeasured(widthMeasureSpec, minimumWidth);
        int computedHeight = resolveMeasured(heightMeasureSpec, minimumHeight);
         log("onMeasure["+widthMeasureSpec+","+heightMeasureSpec+"]:["+computedWidth+","+computedHeight+"]");
