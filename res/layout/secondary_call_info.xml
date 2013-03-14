@@ -31,6 +31,7 @@
         android:layout_height="match_parent"
         android:gravity="top|center_horizontal"
         android:scaleType="centerCrop"
+        android:visibility="visible"
         android:contentDescription="@string/onHold" />
 
     <!-- Overlaps secondary photo when the secondary call is in HOLD state.

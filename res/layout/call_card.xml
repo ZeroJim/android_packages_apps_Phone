@@ -32,8 +32,8 @@
     <ImageView android:id="@+id/photo"
          android:layout_alignParentLeft="true"
          android:layout_alignParentTop="true"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
+         android:layout_width="0dip"
+         android:layout_height="0dip"
          android:gravity="top|center_horizontal"
          android:visibility="gone"
          android:contentDescription="@string/contactPhoto" />

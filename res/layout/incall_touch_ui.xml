@@ -51,7 +51,7 @@
 
         <!-- Main cluster of onscreen buttons on the lower part of the screen. -->
         <LinearLayout android:id="@+id/bottomButtons"
-                      android:orientation="vertical"
+                      android:orientation="vertical"                     
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_alignParentBottom="true">
