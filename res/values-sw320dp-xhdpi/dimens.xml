@@ -35,6 +35,6 @@
     <dimen name="dtmfDialerField_height">32dip</dimen>
     
    <dimen name="imagering_radius">57.5dp</dimen>
-   <dimen name="imagering_margin_bottom">71.5dip</dimen>
+   <dimen name="imagering_margin_bottom">93.5dip</dimen>
    <dimen name="imagering_ring_offset">142dp</dimen>
 </resources>
