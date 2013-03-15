@@ -545,6 +545,8 @@ public class ImageRing extends View {
        int computedHeight = resolveMeasured(heightMeasureSpec, minimumHeight);
         log("onMeasure["+widthMeasureSpec+","+heightMeasureSpec+"]:["+computedWidth+","+computedHeight+"]");
 		setMeasuredDimension(computedWidth, computedHeight);
+		centPoint[0] = (computedWidth>0)? (computedWidth>>1) : (centPoint[0]);
+		centPoint[1] = (computedHeight>0 && computedHeight<500)? (computedHeight>>1) : (centPoint[1]);
 		reset();
 	}
 	
