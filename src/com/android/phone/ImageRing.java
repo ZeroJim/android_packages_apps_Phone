@@ -1,6 +1,7 @@
 package com.android.phone;
 
 import java.io.InputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -508,18 +509,12 @@ public class ImageRing extends View {
 	private boolean isChecked = true;
 	private Runnable loadHolderImageRunnable = new Runnable(){
 		public void run(){
+			logd("loadHolderImage: number["+number+"] uri:"+uri);
 			isChecked = false;
 			if(number!=null){
 				Bitmap temp = holderImage;
-				if(uri!=null){
-					holderImage = getHolderImage(uri);
-				}else{
-					holderImage = null;
-					logd("url==null will use number:"+number);
-				}
 				
-				if(holderImage==null)
-					holderImage = getHolderImage(number);
+				holderImage = getHolderImage(uri,number);
 					
 				if(holderImage!=null){
 					imageRectF.set(centPoint[0]-(holderImage.getWidth()>>1),
@@ -531,6 +526,7 @@ public class ImageRing extends View {
 				}
 				if(temp!=null)	temp.recycle();
 				number = null;
+				uri = null;
 			}
 		}
 	};
@@ -538,42 +534,40 @@ public class ImageRing extends View {
 	 * 圆形框内显示图
 	 */
 	private static final String[]  project = new String[]{Phone._ID, Phone.PHOTO_THUMBNAIL_URI, Phone.NUMBER};
-									
-	private Bitmap getHolderImage(String number){
-		Bitmap bitmap = null;
-		if(number!=null){
-			Cursor c = this.getContext().getContentResolver()
-								.query(Phone.CONTENT_URI, project, Phone.NUMBER+"='"+number+"'",null,null);
-			if(c!=null){
-				if(c.moveToFirst()&&c.getString(1)!=null){
-					Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, c.getLong(0)); 
-					InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(this.getContext().getContentResolver(), uri,true); 
-					bitmap = BitmapFactory.decodeStream(input);
-				}
-				c.close();
-			}
-		}
-		if(bitmap!=null)
-			return toRoundBitmap(bitmap,mImageRadius);
-		else
-			logd("bitmap==null  number: "+number);	
-		isChecked = true;
-		return loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_header);
-	}
-	private Bitmap getHolderImage(Uri uri){
+	
+	private Bitmap getHolderImage(Uri uri,String number){
 		Bitmap bitmap = null;
 		if(uri!=null){
 			InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(this.getContext().getContentResolver(), uri,true); 
 			bitmap = BitmapFactory.decodeStream(input);
+			logd("load image from uri:"+(uri)+" :"+(bitmap!=null));
+		}
+		if(bitmap==null && (number!=null && !number.isEmpty())){
+			Cursor c = this.getContext().getContentResolver()
+								.query(Phone.CONTENT_URI, project, Phone.NUMBER+"='"+number+"'",null,null);
+			if(c!=null){
+				try{
+					if(c.moveToFirst()&&c.getString(1)!=null){
+						Uri u = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, c.getLong(0)); 
+						InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(this.getContext().getContentResolver(), u,true); 
+						bitmap = BitmapFactory.decodeStream(input);
+						input.close();
+					}
+				}catch(IOException e){
+					e.printStackTrace();
+				}finally{
+					c.close();
+				}
+			}
+			logd("load image from number:"+(number)+" :"+(bitmap!=null));
 		}
 		
 		if(bitmap!=null)
 			return toRoundBitmap(bitmap,mImageRadius);
-		else
-			logd("bitmap==null uri: "+uri);
 		isChecked = true;
 		return loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_header);
-	}
+	
+	}									
 	
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
