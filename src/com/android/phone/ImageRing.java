@@ -101,7 +101,7 @@ public class ImageRing extends View {
 		this(context, attrs,0);
 	}
 	
-	private Handler mHander = new Handler(){
+/*	private Handler mHander = new Handler(){
 		@Override
 		public void handleMessage(Message msg) {
 			switch(msg.what){
@@ -115,9 +115,9 @@ public class ImageRing extends View {
 			super.handleMessage(msg);
 		}
 	};
-
+*/
 	private void init(TypedArray mTypeArray) {
-		log("init()");
+		loge("=================init()");
 		isImageMove = false;
 		posHold[0] = posHold[1] = 0;
 		posFix[0] = posFix[1] = 0;
@@ -145,6 +145,7 @@ public class ImageRing extends View {
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		
 		mVibrator = (Vibrator) this.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+		
 		exec.execute(backgroundLoad);
 	}
 	
@@ -164,16 +165,17 @@ public class ImageRing extends View {
 			itemList = new ArrayList<RingItem>();
 			itemList.add(new RingItem(answer	,answer	,1,-1,OnTriggerListener.ANSWER));		// right
 			itemList.add(new RingItem(refuse	,refuse	,-1	,-1,OnTriggerListener.REFUSE));		// left
-			mHander.sendEmptyMessage(OK);
+			//mHander.sendEmptyMessage(OK);
 			init = true;
 			reset();
 			ImageRing.this.postInvalidate();
 			exec.execute(bgRunnable);
-			log("mHander sendEmptyMessage(OK)");
+			log("init=true,can be reset");
 		}
 	};
 	private Runnable bitmapLoad = new Runnable(){
 		public void run(){
+			log("onBitmapLoad");
 			loadAllBitmap();
 		}
 	};
@@ -184,19 +186,21 @@ public class ImageRing extends View {
 		boolean needLoad = false;
 		if(!init){
 			canvas.drawText("please wait", this.getWidth()>>1, this.getHeight()>>1, mPaint);
-			log("err!!    init fail   ===== return");
+			log("err!!   onDraw init fail   ===== return");
 			return;
 		}
 		if(answer!=null){
 			canvas.drawBitmap(answer, answerRectF.left, answerRectF.top, mPaint);// 接听
 		}else{
 			needLoad = true;
+			loge("====err! onDraw answer=null");
 		}
 		
 		if(refuse!=null){
 			canvas.drawBitmap(refuse, refuseRectF.left, refuseRectF.top, mPaint);//挂断
 		}else{
 			needLoad = true;
+			loge("====err!  onDraw refuse=null");
 		}
 		
 		if(isImageMove){
@@ -219,25 +223,25 @@ public class ImageRing extends View {
 				mPaint.setAlpha(alpha);
 			}else{
 				needLoad = true;
-				log("====err! imageBackgroundLight is null!!!");
+				loge("====err!  onDraw imageBackgroundLight=null");
 			}
 			if(imageBg!=null){
 				canvas.drawBitmap(imageBg, headBgRectF.left, headBgRectF.top, mPaint);	// 白色背景
 			}else{
 				needLoad = true;
-				log("====err! imageBackgroundWidth is null!!!");
+				loge("====err!  onDraw imageBackgroundWidth=null");
 			}
 			if(holderImage!=null){
 				canvas.drawBitmap(holderImage, imageRectF.left, imageRectF.top, mPaint);		// 头像
 			}else{
 				needLoad = true;
-				log("====err! imageHolder is null!!!");
+				loge("====err!  onDraw imageHolder=null");
 			}
 			if(imageTop!=null){
 				canvas.drawBitmap(imageTop, headTopRectF.left, headTopRectF.top, mPaint);//半透明层
 			}else{
 				needLoad = true;
-				log("====err! imageTop is null!!!");
+				loge("====err!  onDraw imageTop=null");
 			}
 		}
 		
@@ -253,7 +257,9 @@ public class ImageRing extends View {
 		boolean holder = false;
 		switch(event.getAction()){
 		case MotionEvent.ACTION_DOWN:
-			isInRing(event);
+			if(isInRing(event)){
+				log("in ImageRectF ");
+			}
 			holder = true;
 			break;
 		case MotionEvent.ACTION_UP:
@@ -358,24 +364,32 @@ public class ImageRing extends View {
 		for(RingItem ri:itemList){
 			ri.setCent(centPoint[0] + (ringOffset*ri.position), centPoint[1]);
 		}
+		log("item reset: size="+itemList.size()+" ");
 		if(!init) return;
+		log("reset()");
 		if(holderImage!=null)
 			imageRectF.set(centPoint[0]-(holderImage.getWidth()>>1),
 					centPoint[1]-(holderImage.getHeight()>>1), 
 					centPoint[0]+(holderImage.getWidth()>>1),
 					centPoint[1]+(holderImage.getHeight()>>1));
+		else
+			loge("reset holderImage=null");
 		if(imageBg!=null)
 			headBgRectF.set(centPoint[0]-(imageBg.getWidth()>>1),
 					centPoint[1]-(imageBg.getHeight()>>1),
 					centPoint[0]+(imageBg.getWidth()>>1),
 					centPoint[1]+(imageBg.getHeight()>>1)
 				);
+		else
+			loge("reset imageBg=null");
 		if(imageBgLight!=null)
 			headBgLightRectF.set(centPoint[0]-(imageBgLight.getWidth()>>1),
 					centPoint[1]-(imageBgLight.getHeight()>>1),
 					centPoint[0]+(imageBgLight.getWidth()>>1),
 					centPoint[1]+(imageBgLight.getHeight()>>1)
 				);
+		else
+			loge("reset imageBgLight=null");
 		if(imageTop!=null)
 			headTopRectF.set(centPoint[0]-(imageTop.getWidth()>>1),
 					centPoint[1]-(imageTop.getHeight()>>1),
@@ -388,12 +402,16 @@ public class ImageRing extends View {
 					centPoint[0]+ringOffset+(answer.getWidth()>>1),
 					centPoint[1]+(answer.getHeight()>>1)
 				);
+		else
+			loge("reset answer=null");
 		if(refuse!=null)
 			refuseRectF.set(centPoint[0]-ringOffset-(refuse.getWidth()>>1),
 					centPoint[1]-(refuse.getHeight()>>1),
 					centPoint[0]-ringOffset+(refuse.getWidth()>>1),
 					centPoint[1]+(refuse.getHeight()>>1)
 				);
+		else
+			loge("reset refuse=null");
 	}
 	
 	private void loadAllBitmap(){
@@ -630,6 +648,9 @@ public class ImageRing extends View {
 	
 	public static void log(String msg){
 		Log.d(TAG, msg);
+	}
+	public statci void loge(String msg){
+		Log.e(TAG,msg);
 	}
 	/**
      * Interface definition for a callback to be invoked when the dial
