@@ -38,6 +38,7 @@ import android.net.Uri;
 
 public class ImageRing extends View {
 	private static final String TAG = "ImageRing";
+	private static final boolean debug = true;
 	
 	private static final int OK = 200;
 	private static boolean init = false;
@@ -106,7 +107,7 @@ public class ImageRing extends View {
 		public void handleMessage(Message msg) {
 			switch(msg.what){
 			case OK:
-				log("mHander handleMessage init ok");
+				logd("mHander handleMessage init ok");
 				init = true;
 				reset();
 				ImageRing.this.invalidate();
@@ -117,7 +118,7 @@ public class ImageRing extends View {
 	};
 */
 	private void init(TypedArray mTypeArray) {
-		loge("=================init()");
+		logd("=================init()");
 		isImageMove = false;
 		posHold[0] = posHold[1] = 0;
 		posFix[0] = posFix[1] = 0;
@@ -170,12 +171,12 @@ public class ImageRing extends View {
 			reset();
 			ImageRing.this.postInvalidate();
 			exec.execute(bgRunnable);
-			log("init=true,can be reset");
+			logd("init=true,can be reset");
 		}
 	};
 	private Runnable bitmapLoad = new Runnable(){
 		public void run(){
-			log("onBitmapLoad");
+			logd("onBitmapLoad");
 			loadAllBitmap();
 		}
 	};
@@ -186,7 +187,7 @@ public class ImageRing extends View {
 		boolean needLoad = false;
 		if(!init){
 			canvas.drawText("please wait", this.getWidth()>>1, this.getHeight()>>1, mPaint);
-			log("err!!   onDraw init fail   ===== return");
+			logd("err!!   onDraw init fail   ===== return");
 			return;
 		}
 		if(answer!=null){
@@ -258,7 +259,7 @@ public class ImageRing extends View {
 		switch(event.getAction()){
 		case MotionEvent.ACTION_DOWN:
 			if(isInRing(event)){
-				log("in ImageRectF ");
+				logd("in ImageRectF ");
 			}
 			holder = true;
 			break;
@@ -288,7 +289,7 @@ public class ImageRing extends View {
 	}
 	//----------------------------//
 	private void actionUp(MotionEvent event) {
-		log("actionUp()");
+		logd("actionUp()");
 		boolean isActive = false;
 		if(mOnTriggerListener!=null){
 			RingItem holder = null;
@@ -341,7 +342,7 @@ public class ImageRing extends View {
 				if(ri.isActive!=ri.oldActive)
 					vibrate();
 				posFix[0] = ri.position * ringOffset;
-				log("active: "+ri.funType);
+				logd("active: "+ri.funType);
 			}
 		}
 		
@@ -356,19 +357,19 @@ public class ImageRing extends View {
 	}
 	
 	public void reset(){
-		log(" on reset view	("+this.getWidth()+","+this.getHeight()+")");
+		logd(" on reset view	("+this.getWidth()+","+this.getHeight()+")");
 		centPoint[0] = (this.getWidth()>0)? (this.getWidth()>>1) : (centPoint[0]);
 		centPoint[1] = (this.getHeight()>0 && this.getHeight()<500)? (this.getHeight()>>1) : (centPoint[1]);
-		log("on reset center ("+centPoint[0]+","+centPoint[1]+")");
+		logd("on reset center ("+centPoint[0]+","+centPoint[1]+")");
 		
 		if(itemList!=null && itemList.size()>0)
 		for(RingItem ri:itemList){
 			ri.setCent(centPoint[0] + (ringOffset*ri.position), centPoint[1]);
 		}
 		if(itemList!=null)
-			log("item reset: size="+itemList.size()+" ");
+			logd("item reset: size="+itemList.size()+" ");
 		if(!init) return;
-		log("reset()");
+		logd("reset()");
 		if(holderImage!=null)
 			imageRectF.set(centPoint[0]-(holderImage.getWidth()>>1),
 					centPoint[1]-(holderImage.getHeight()>>1), 
@@ -414,10 +415,18 @@ public class ImageRing extends View {
 				);
 		else
 			loge("reset refuse=null");
+			
+		loge("onrest left,right,top,right");
+		logd("imageRectF ["+imageRectF.left+","+imageRectF.right+","+imageRectF.top+","+imageRectF.bottom+"]");
+		logd("headBgRectF ["+headBgRectF.left+","+headBgRectF.right+","+headBgRectF.top+","+headBgRectF.bottom+"]");
+		logd("headBgLightRectF ["+headBgLightRectF.left+","+headBgLightRectF.right+","+headBgLightRectF.top+","+headBgLightRectF.bottom+"]");
+		logd("headTopRectF ["+headTopRectF.left+","+headTopRectF.right+","+headTopRectF.top+","+headTopRectF.bottom+"]");
+		logd("answerRectF ["+answerRectF.left+","+answerRectF.right+","+answerRectF.top+","+answerRectF.bottom+"]");
+		logd("refuseRectF ["+refuseRectF.left+","+refuseRectF.right+","+refuseRectF.top+","+refuseRectF.bottom+"]");
 	}
 	
 	private void loadAllBitmap(){
-		log("loadAllBitmap()");
+		logd("loadAllBitmap()");
 		if(imageBgLight==null)	imageBgLight = loadDrawable(imageBgLightId);
 		if(imageBg==null)	imageBg = loadDrawable(imageBgId);
 		if(imageTop==null)	imageTop = loadDrawable(imageTopId);
@@ -426,6 +435,15 @@ public class ImageRing extends View {
 		if(holderImage==null)	holderImage = loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_header);
 		if(answer==null)	answer = loadDrawable(answerId);
 		if(refuse==null)	refuse = loadDrawable(refuseId);
+		reset();
+		
+		logd("loadAllBitmap: imageBgLight:["+(imageBgLight!=null)
+					+"] imageBg:["+(imageBg!=null)
+					+"] imageTop:["+(imageTop!=null)
+					+"] holderImage:["+(holderImage!=null)
+					+"] answer:["+(answer!=null)
+					+"] refuse:["+(refuse!=null)+"]"
+			);
 		reset();
 	}
 	private Bitmap loadDrawable(int rId){
@@ -441,7 +459,7 @@ public class ImageRing extends View {
     }
 	
 	private void release(){
-		log("release()");
+		logd("release()");
 		if(imageBg!=null){
 			imageBg.recycle();
 			imageBg = null;
@@ -475,13 +493,13 @@ public class ImageRing extends View {
 	}
 	public void setInComingNumber(String number){
 		this.number = number;
-		log("on setInComingNumber: "+number);
+		logd("on setInComingNumber: "+number);
 		if(isChecked)
 			exec.execute(loadHolderImageRunnable);
 	}
 	void setInComingUri(Uri uri){
 		this.uri = uri;
-		log("on setInComingUri: "+uri);
+		logd("on setInComingUri: "+uri);
 		if(isChecked)
 			exec.execute(loadHolderImageRunnable);
 	}
@@ -497,7 +515,7 @@ public class ImageRing extends View {
 					holderImage = getHolderImage(uri);
 				}else{
 					holderImage = null;
-					log("url==null will use number:"+number);
+					logd("url==null will use number:"+number);
 				}
 				
 				if(holderImage==null)
@@ -509,7 +527,7 @@ public class ImageRing extends View {
 								centPoint[0]+(holderImage.getWidth()>>1),
 								centPoint[1]+(holderImage.getHeight()>>1));
 				}else{
-					log("err!!!holderImage == null!");
+					logd("err!!!holderImage == null!");
 				}
 				if(temp!=null)	temp.recycle();
 				number = null;
@@ -538,7 +556,7 @@ public class ImageRing extends View {
 		if(bitmap!=null)
 			return toRoundBitmap(bitmap,mImageRadius);
 		else
-			log("bitmap==null  number: "+number);	
+			logd("bitmap==null  number: "+number);	
 		isChecked = true;
 		return loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_header);
 	}
@@ -552,19 +570,19 @@ public class ImageRing extends View {
 		if(bitmap!=null)
 			return toRoundBitmap(bitmap,mImageRadius);
 		else
-			log("bitmap==null uri: "+uri);
+			logd("bitmap==null uri: "+uri);
 		isChecked = true;
 		return loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_header);
 	}
 	
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		log("onMeasure");
+		logd("onMeasure");
 		int minimumHeight = (mImageRadius+40)<<1;
 		int minimumWidth = minimumHeight + 50;
 		int computedWidth = resolveMeasured(widthMeasureSpec, minimumWidth);
        int computedHeight = resolveMeasured(heightMeasureSpec, minimumHeight);
-        log("onMeasure["+widthMeasureSpec+","+heightMeasureSpec+"]:["+computedWidth+","+computedHeight+"]");
+        logd("onMeasure["+widthMeasureSpec+","+heightMeasureSpec+"]:["+computedWidth+","+computedHeight+"]");
 		setMeasuredDimension(computedWidth, computedHeight);
 		centPoint[0] = (computedWidth>0)? (computedWidth>>1) : (centPoint[0]);
 		centPoint[1] = (computedHeight>0 && computedHeight<500)? (computedHeight>>1) : (centPoint[1]);
@@ -649,8 +667,8 @@ public class ImageRing extends View {
 		return bitmap;
 	}
 	
-	public static void log(String msg){
-		Log.d(TAG, msg);
+	public static void logd(String msg){
+		if(debug)	Log.d(TAG, msg);
 	}
 	public static void loge(String msg){
 		Log.e(TAG,msg);
