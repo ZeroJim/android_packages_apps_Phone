@@ -365,7 +365,8 @@ public class ImageRing extends View {
 		for(RingItem ri:itemList){
 			ri.setCent(centPoint[0] + (ringOffset*ri.position), centPoint[1]);
 		}
-		log("item reset: size="+itemList.size()+" ");
+		if(itemList!=null)
+			log("item reset: size="+itemList.size()+" ");
 		if(!init) return;
 		log("reset()");
 		if(holderImage!=null)
