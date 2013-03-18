@@ -356,9 +356,10 @@ public class ImageRing extends View {
 	}
 	
 	public void reset(){
-		log(" on reset ("+this.getWidth()+","+this.getHeight()+")");
+		log(" on reset view	("+this.getWidth()+","+this.getHeight()+")");
 		centPoint[0] = (this.getWidth()>0)? (this.getWidth()>>1) : (centPoint[0]);
 		centPoint[1] = (this.getHeight()>0 && this.getHeight()<500)? (this.getHeight()>>1) : (centPoint[1]);
+		log("on reset center ("+centPoint[0]+","+centPoint[1]+")");
 		
 		if(itemList!=null && itemList.size()>0)
 		for(RingItem ri:itemList){
@@ -474,13 +475,13 @@ public class ImageRing extends View {
 	public void setInComingNumber(String number){
 		this.number = number;
 		log("on setInComingNumber: "+number);
-		//if(isChecked)
+		if(isChecked)
 			exec.execute(loadHolderImageRunnable);
 	}
 	void setInComingUri(Uri uri){
 		this.uri = uri;
 		log("on setInComingUri: "+uri);
-		//if(isChecked)
+		if(isChecked)
 			exec.execute(loadHolderImageRunnable);
 	}
 	private String number = null;
@@ -537,6 +538,7 @@ public class ImageRing extends View {
 			return toRoundBitmap(bitmap,mImageRadius);
 		else
 			log("bitmap==null  number: "+number);	
+		isChecked = true;
 		return loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_header);
 	}
 	private Bitmap getHolderImage(Uri uri){
@@ -550,7 +552,7 @@ public class ImageRing extends View {
 			return toRoundBitmap(bitmap,mImageRadius);
 		else
 			log("bitmap==null uri: "+uri);
-			
+		isChecked = true;
 		return loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_header);
 	}
 	
@@ -649,7 +651,7 @@ public class ImageRing extends View {
 	public static void log(String msg){
 		Log.d(TAG, msg);
 	}
-	public statci void loge(String msg){
+	public static void loge(String msg){
 		Log.e(TAG,msg);
 	}
 	/**
