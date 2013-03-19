@@ -358,8 +358,8 @@ public class ImageRing extends View {
 		
 		// 透明度
 		//float distance = alphaSection * FloatMath.sqrt(posFix[0]*posFix[0]+posFix[1]*posFix[1]);
-		float distance = alphaSelect * Math.abs(posFix[0]);
-		mAlpha = (int)(distance>255? 0: 255-distance);
+		//float distance = alphaSelect * Math.abs(posFix[0]);
+		//mAlpha = (int)(distance>255? 0: 255-distance);
 		//logd("distance="+distance+" || ["+posFix[0]+","+posFix[1]+"]");
 		//distance = distance>255? 255:distance;
 		//imagePaint.setAlpha((int)(255-distance));
