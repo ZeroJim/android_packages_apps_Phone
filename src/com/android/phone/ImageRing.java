@@ -12,6 +12,8 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -60,20 +62,28 @@ public class ImageRing extends View {
 	
 	private int mAlpha = 255;
 	private int mVibrateDuration = 20;
-	
+
+/*	
 	private Bitmap imageBg;
 	private Bitmap imageBgLight;
 	private Bitmap imageTop;
 	private Bitmap holderImage;
 	private Bitmap answer;
 	private Bitmap refuse;
+*/	
+	private Drawable imageBg;
+	private Drawable imageBgLight;
+	private Drawable imageTop;
+	private Drawable holderImage;
+	private Drawable answer;
+	private Drawable refuse;
 	
-	private RectF imageRectF;
-	private RectF headBgRectF;
-	private RectF headBgLightRectF;
-	private RectF headTopRectF;
-	private RectF answerRectF;
-	private RectF refuseRectF;
+	private Rect imageRect;
+	private Rect headBgRect;
+	private Rect headBgLightRect;
+	private Rect headTopRect;
+	private Rect answerRect;
+	private Rect refuseRect;
 	
 	private float[] centPoint	= new float[2];
 	private float[] posHold 	= new float[2];
@@ -102,29 +112,20 @@ public class ImageRing extends View {
 	public ImageRing(Context context, AttributeSet attrs) {
 		this(context, attrs,0);
 	}
-	
-/*	private Handler mHander = new Handler(){
-		@Override
-		public void handleMessage(Message msg) {
-			switch(msg.what){
-			case OK:
-				logd("mHander handleMessage init ok");
-				init = true;
-				reset();
-				ImageRing.this.invalidate();
-				exec.execute(bgRunnable);
-			}
-			super.handleMessage(msg);
-		}
-	};
-*/
+	private int getResourceId(TypedArray mTypeArray, int id) {
+        TypedValue tv = null;
+        if(mTypeArray!=null)
+        	tv = mTypeArray.peekValue(id);
+        return tv == null ? 0 : tv.resourceId;
+    }
+    
 	private void init(TypedArray mTypeArray) {
 		logd("=================init()");
 		isImageMove = false;
 		posHold[0] = posHold[1] = 0;
 		posFix[0] = posFix[1] = 0;
 		
-		exec = Executors.newCachedThreadPool();
+		exec = Executors.newFixedThreadPool(3);
 		mImageRadius 		= (int) mTypeArray.getDimension(R.styleable.ImageRing_radius, mImageRadius);
 		ringOffset = mTypeArray.getDimension(R.styleable.ImageRing_ringOffset, ringOffset);
 		
@@ -155,19 +156,19 @@ public class ImageRing extends View {
 		@Override
 		public void run() {
 		
-			imageRectF = new RectF();
-			headTopRectF = new RectF();
-			answerRectF = new RectF();
-			refuseRectF = new RectF();
-			headBgRectF = new RectF();
-			headBgLightRectF = new RectF();
+			imageRect = new Rect();
+			headTopRect = new Rect();
+			answerRect = new Rect();
+			refuseRect = new Rect();
+			headBgRect = new Rect();
+			headBgLightRect = new Rect();
 			
-			loadAllBitmap();
+			loadAllDrawable();
 			
 			itemList = new ArrayList<RingItem>();
 			itemList.add(new RingItem(answer	,answer	,1,-1,OnTriggerListener.ANSWER));		// right
 			itemList.add(new RingItem(refuse	,refuse	,-1	,-1,OnTriggerListener.REFUSE));		// left
-			//mHander.sendEmptyMessage(OK);
+			
 			init = true;
 			reset();
 			ImageRing.this.postInvalidate();
@@ -178,7 +179,7 @@ public class ImageRing extends View {
 	private Runnable bitmapLoad = new Runnable(){
 		public void run(){
 			logd("onBitmapLoad");
-			loadAllBitmap();
+			loadAllDrawable();
 		}
 	};
 	
@@ -191,56 +192,60 @@ public class ImageRing extends View {
 			logd("err!!   onDraw init fail   ===== return");
 			return;
 		}
-		if(answer!=null){
-			canvas.drawBitmap(answer, answerRectF.left, answerRectF.top, mPaint);// 接听
-		}else{
-			needLoad = true;
-			loge("====err! onDraw answer=null");
-		}
+		if(answer!=null){	answer.draw(canvas);	}else{	needLoad = true;	loge("====err! onDraw answer=null");}
 		
-		if(refuse!=null){
-			canvas.drawBitmap(refuse, refuseRectF.left, refuseRectF.top, mPaint);//挂断
-		}else{
-			needLoad = true;
-			loge("====err!  onDraw refuse=null");
-		}
+		if(refuse!=null){	refuse.draw(canvas);	}else{	needLoad = true;	loge("====err!  onDraw refuse=null");}
 		
 		if(isImageMove){
-			//mPaint.setAlpha(mAlpha);
 			if(imageBg!=null){
-				canvas.drawBitmap(imageBg, headBgRectF.left+posFix[0], headBgRectF.top+posFix[1], mPaint);	// 白色背景
+				imageBg.setBounds((int)(headBgRect.left + posFix[0]),
+								(int)(headBgRect.top + posFix[1]),
+								(int)(headBgRect.right + posFix[0]),
+								(int)(headBgRect.bottom + posFix[1]));
+				imageBg.draw(canvas);
+				//canvas.drawBitmap(imageBg, headBgRect.left+posFix[0], headBgRect.top+posFix[1], mPaint);	// 白色背景
 			}
 			if(holderImage!=null){
-				canvas.drawBitmap(holderImage, imageRectF.left+posFix[0], imageRectF.top+posFix[1], mPaint);	// 头像
+				holderImage.setBounds((int)(imageRect.left + posFix[0]),
+								(int)(imageRect.top + posFix[1]),
+								(int)(imageRect.right + posFix[0]),
+								(int)(imageRect.bottom + posFix[1]));
+				holderImage.draw(canvas);
+				//canvas.drawBitmap(holderImage, imageRect.left+posFix[0], imageRect.top+posFix[1], mPaint);	// 头像
 			}
 			if(imageTop!=null){
-				canvas.drawBitmap(imageTop, headTopRectF.left+posFix[0], headTopRectF.top+posFix[1], mPaint);//半透明层
+				imageTop.setBounds((int)(headTopRect.left + posFix[0]),
+								(int)(headTopRect.top + posFix[1]),
+								(int)(headTopRect.right + posFix[0]),
+								(int)(headTopRect.bottom + posFix[1]));
+				imageTop.draw(canvas);
+				//canvas.drawBitmap(imageTop, headTopRect.left+posFix[0], headTopRect.top+posFix[1], mPaint);//半透明层
 			}
-			//mPaint.setAlpha(255);
 		}else{
 			if(imageBgLight!=null){
-				int alpha = mPaint.getAlpha();
-				mPaint.setAlpha(bgAlpha);
-				canvas.drawBitmap(imageBgLight, headBgLightRectF.left, headBgLightRectF.top, mPaint);	// 背景
-				mPaint.setAlpha(alpha);
+				imageBgLight.setAlpha(bgAlpha);
+				imageBgLight.draw(canvas);
 			}else{
 				needLoad = true;
 				loge("====err!  onDraw imageBackgroundLight=null");
 			}
 			if(imageBg!=null){
-				canvas.drawBitmap(imageBg, headBgRectF.left, headBgRectF.top, mPaint);	// 白色背景
+				imageBg.draw(canvas);
+				//canvas.drawBitmap(imageBg, headBgRect.left, headBgRect.top, mPaint);	// 白色背景
 			}else{
 				needLoad = true;
 				loge("====err!  onDraw imageBackgroundWidth=null");
 			}
 			if(holderImage!=null){
-				canvas.drawBitmap(holderImage, imageRectF.left, imageRectF.top, mPaint);		// 头像
+				holderImage.draw(canvas);
+				//canvas.drawBitmap(holderImage, imageRect.left, imageRect.top, mPaint);		// 头像
 			}else{
 				needLoad = true;
 				loge("====err!  onDraw imageHolder=null");
 			}
 			if(imageTop!=null){
-				canvas.drawBitmap(imageTop, headTopRectF.left, headTopRectF.top, mPaint);//半透明层
+				imageTop.draw(canvas);
+				//canvas.drawBitmap(imageTop, headTopRect.left, headTopRect.top, mPaint);//半透明层
 			}else{
 				needLoad = true;
 				loge("====err!  onDraw imageTop=null");
@@ -260,7 +265,7 @@ public class ImageRing extends View {
 		switch(event.getAction()){
 		case MotionEvent.ACTION_DOWN:
 			if(isInRing(event)){
-				logd("in ImageRectF ");
+				logd("in ImageRect ");
 			}
 			holder = true;
 			break;
@@ -280,7 +285,7 @@ public class ImageRing extends View {
 	private boolean isInRing(MotionEvent event){
 		float x=event.getX();
 		float y=event.getY();
-		if((imageRectF.left < x && imageRectF.right > x) && (imageRectF.top<y && imageRectF.bottom>y)){
+		if((imageRect.left < x && imageRect.right > x) && (imageRect.top<y && imageRect.bottom>y)){
 			isImageMove = true;
 			posHold[0] = x;
 			posHold[1] = y;
@@ -311,6 +316,9 @@ public class ImageRing extends View {
 			isImageMove = false;
 			posHold[0] = posHold[1] = 0;
 			posFix[0] = posFix[1] = 0;
+			holderImage.setBounds(imageRect);
+			imageBg.setBounds(headBgRect);
+			imageTop.setBounds(headTopRect);
 		//}
 	}
 	//----------------------------//
@@ -338,7 +346,7 @@ public class ImageRing extends View {
 		
 		for(int i=0;i<itemList.size();i++){
 			RingItem ri = itemList.get(i);
-			ri.checkPosition(eventX,centPoint[1]);
+			ri.checkPosition(eventX/*,centPoint[1]*/);
 			if(ri.isActive){
 				if(ri.isActive!=ri.oldActive)
 					vibrate();
@@ -371,63 +379,70 @@ public class ImageRing extends View {
 			logd("item reset: size="+itemList.size()+" ");
 		if(!init) return;
 		logd("reset()");
-		if(holderImage!=null)
-			imageRectF.set(centPoint[0]-(holderImage.getWidth()>>1),
-					centPoint[1]-(holderImage.getHeight()>>1), 
-					centPoint[0]+(holderImage.getWidth()>>1),
-					centPoint[1]+(holderImage.getHeight()>>1));
-		else
+		if(holderImage!=null){
+			imageRect.set((int)(centPoint[0]-(holderImage.getIntrinsicWidth()>>1)),
+					(int)(centPoint[1]-(holderImage.getIntrinsicHeight()>>1)), 
+					(int)(centPoint[0]+(holderImage.getIntrinsicWidth()>>1)),
+					(int)(centPoint[1]+(holderImage.getIntrinsicHeight()>>1)));
+			holderImage.setBounds(imageRect);
+		}else
 			loge("reset holderImage=null");
-		if(imageBg!=null)
-			headBgRectF.set(centPoint[0]-(imageBg.getWidth()>>1),
-					centPoint[1]-(imageBg.getHeight()>>1),
-					centPoint[0]+(imageBg.getWidth()>>1),
-					centPoint[1]+(imageBg.getHeight()>>1)
+		if(imageBg!=null){
+			headBgRect.set((int)(centPoint[0]-(imageBg.getIntrinsicWidth()>>1)),
+					(int)(centPoint[1]-(imageBg.getIntrinsicHeight()>>1)),
+					(int)(centPoint[0]+(imageBg.getIntrinsicWidth()>>1)),
+					(int)(centPoint[1]+(imageBg.getIntrinsicHeight()>>1))
 				);
-		else
+			imageBg.setBounds(headBgRect);
+		}else
 			loge("reset imageBg=null");
-		if(imageBgLight!=null)
-			headBgLightRectF.set(centPoint[0]-(imageBgLight.getWidth()>>1),
-					centPoint[1]-(imageBgLight.getHeight()>>1),
-					centPoint[0]+(imageBgLight.getWidth()>>1),
-					centPoint[1]+(imageBgLight.getHeight()>>1)
+		if(imageBgLight!=null){
+			headBgLightRect.set((int)(centPoint[0]-(imageBgLight.getIntrinsicWidth()>>1)),
+					(int)(centPoint[1]-(imageBgLight.getIntrinsicHeight()>>1)),
+					(int)(centPoint[0]+(imageBgLight.getIntrinsicWidth()>>1)),
+					(int)(centPoint[1]+(imageBgLight.getIntrinsicHeight()>>1))
 				);
-		else
+			imageBgLight.setBounds(headBgLightRect);
+		}else
 			loge("reset imageBgLight=null");
-		if(imageTop!=null)
-			headTopRectF.set(centPoint[0]-(imageTop.getWidth()>>1),
-					centPoint[1]-(imageTop.getHeight()>>1),
-					centPoint[0]+(imageTop.getWidth()>>1),
-					centPoint[1]+(imageTop.getHeight()>>1)
+		if(imageTop!=null){
+			headTopRect.set((int)(centPoint[0]-(imageTop.getIntrinsicWidth()>>1)),
+					(int)(centPoint[1]-(imageTop.getIntrinsicHeight()>>1)),
+					(int)(centPoint[0]+(imageTop.getIntrinsicWidth()>>1)),
+					(int)(centPoint[1]+(imageTop.getIntrinsicHeight()>>1))
 				);
-		if(answer!=null)
-			answerRectF.set(centPoint[0]+ringOffset-(answer.getWidth()>>1),
-					centPoint[1]-(answer.getHeight()>>1),
-					centPoint[0]+ringOffset+(answer.getWidth()>>1),
-					centPoint[1]+(answer.getHeight()>>1)
+			imageTop.setBounds(headTopRect);
+		}
+		if(answer!=null){
+			answerRect.set((int)(centPoint[0]+ringOffset-(answer.getIntrinsicWidth()>>1)),
+					(int)(centPoint[1]-(answer.getIntrinsicHeight()>>1)),
+					(int)(centPoint[0]+ringOffset+(answer.getIntrinsicWidth()>>1)),
+					(int)(centPoint[1]+(answer.getIntrinsicHeight()>>1))
 				);
-		else
+			answer.setBounds(answerRect);
+		}else
 			loge("reset answer=null");
-		if(refuse!=null)
-			refuseRectF.set(centPoint[0]-ringOffset-(refuse.getWidth()>>1),
-					centPoint[1]-(refuse.getHeight()>>1),
-					centPoint[0]-ringOffset+(refuse.getWidth()>>1),
-					centPoint[1]+(refuse.getHeight()>>1)
+		if(refuse!=null){
+			refuseRect.set((int)(centPoint[0]-ringOffset-(refuse.getIntrinsicWidth()>>1)),
+					(int)(centPoint[1]-(refuse.getIntrinsicHeight()>>1)),
+					(int)(centPoint[0]-ringOffset+(refuse.getIntrinsicWidth()>>1)),
+					(int)(centPoint[1]+(refuse.getIntrinsicHeight()>>1))
 				);
-		else
+			refuse.setBounds(refuseRect);
+		}else
 			loge("reset refuse=null");
 			
 		loge("onrest left,right,top,right");
-		logd("imageRectF ["+imageRectF.left+","+imageRectF.right+","+imageRectF.top+","+imageRectF.bottom+"]");
-		logd("headBgRectF ["+headBgRectF.left+","+headBgRectF.right+","+headBgRectF.top+","+headBgRectF.bottom+"]");
-		logd("headBgLightRectF ["+headBgLightRectF.left+","+headBgLightRectF.right+","+headBgLightRectF.top+","+headBgLightRectF.bottom+"]");
-		logd("headTopRectF ["+headTopRectF.left+","+headTopRectF.right+","+headTopRectF.top+","+headTopRectF.bottom+"]");
-		logd("answerRectF ["+answerRectF.left+","+answerRectF.right+","+answerRectF.top+","+answerRectF.bottom+"]");
-		logd("refuseRectF ["+refuseRectF.left+","+refuseRectF.right+","+refuseRectF.top+","+refuseRectF.bottom+"]");
+		logd("imageRect ["+imageRect.left+","+imageRect.right+","+imageRect.top+","+imageRect.bottom+"]");
+		logd("headBgRect ["+headBgRect.left+","+headBgRect.right+","+headBgRect.top+","+headBgRect.bottom+"]");
+		logd("headBgLightRect ["+headBgLightRect.left+","+headBgLightRect.right+","+headBgLightRect.top+","+headBgLightRect.bottom+"]");
+		logd("headTopRect ["+headTopRect.left+","+headTopRect.right+","+headTopRect.top+","+headTopRect.bottom+"]");
+		logd("answerRect ["+answerRect.left+","+answerRect.right+","+answerRect.top+","+answerRect.bottom+"]");
+		logd("refuseRect ["+refuseRect.left+","+refuseRect.right+","+refuseRect.top+","+refuseRect.bottom+"]");
 	}
 	
-	private void loadAllBitmap(){
-		logd("loadAllBitmap()");
+	private void loadAllDrawable(){
+		logd("loadAllDrawable()");
 		if(imageBgLight==null)	imageBgLight = loadDrawable(imageBgLightId);
 		if(imageBg==null)	imageBg = loadDrawable(imageBgId);
 		if(imageTop==null)	imageTop = loadDrawable(imageTopId);
@@ -436,9 +451,8 @@ public class ImageRing extends View {
 		if(holderImage==null)	holderImage = loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_header);
 		if(answer==null)	answer = loadDrawable(answerId);
 		if(refuse==null)	refuse = loadDrawable(refuseId);
-		reset();
 		
-		logd("loadAllBitmap: imageBgLight:["+(imageBgLight!=null)
+		logd("loadAllDrawable: imageBgLight:["+(imageBgLight!=null)
 					+"] imageBg:["+(imageBg!=null)
 					+"] imageTop:["+(imageTop!=null)
 					+"] holderImage:["+(holderImage!=null)
@@ -447,27 +461,20 @@ public class ImageRing extends View {
 			);
 		reset();
 	}
-	private Bitmap loadDrawable(int rId){
+/*	private Bitmap loadBitmap(int rId){
 		Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), rId);
 		bitmap.prepareToDraw();
 		return bitmap;
+	}*/
+	private Drawable loadDrawable(int rId){
+		return this.getResources().getDrawable(rId);	
 	}
-	private int getResourceId(TypedArray mTypeArray, int id) {
-        TypedValue tv = null;
-        if(mTypeArray!=null)
-        	tv = mTypeArray.peekValue(id);
-        return tv == null ? 0 : tv.resourceId;
-    }
-	
+/*	
 	private void release(){
 		logd("release()");
 		if(imageBg!=null){
 			imageBg.recycle();
 			imageBg = null;
-		}
-		if(imageBgLight!=null){
-			imageBgLight.recycle();
-			imageBgLight = null;
 		}
 		if(imageTop!=null){
 			imageTop.recycle();
@@ -477,15 +484,8 @@ public class ImageRing extends View {
 			holderImage.recycle();
 			holderImage = null;
 		}
-		if(answer!=null){
-			answer.recycle();
-			answer = null;
-		}
-		if(refuse!=null){
-			refuse.recycle();
-			refuse = null;
-		}
 	}
+	*/
 	///////////////////////////////////////////////////sure //////////////////////////////////////////////////////////
 	private void vibrate(){
 		if(mVibrator!=null){
@@ -512,19 +512,21 @@ public class ImageRing extends View {
 			logd("loadHolderImage: number["+number+"] uri:"+uri);
 			isChecked = false;
 			if(number!=null){
-				Bitmap temp = holderImage;
+				//Bitmap temp = holderImage;
 				
 				holderImage = getHolderImage(uri,number);
 					
 				if(holderImage!=null){
-					imageRectF.set(centPoint[0]-(holderImage.getWidth()>>1),
-								centPoint[1]-(holderImage.getHeight()>>1), 
-								centPoint[0]+(holderImage.getWidth()>>1),
-								centPoint[1]+(holderImage.getHeight()>>1));
+					imageRect.set((int)(centPoint[0]-(holderImage.getIntrinsicWidth()>>1)),
+								(int)(centPoint[1]-(holderImage.getIntrinsicHeight()>>1)), 
+								(int)(centPoint[0]+(holderImage.getIntrinsicWidth()>>1)),
+								(int)(centPoint[1]+(holderImage.getIntrinsicHeight()>>1)));
 				}else{
 					logd("err!!!holderImage == null!");
 				}
-				if(temp!=null)	temp.recycle();
+				
+				holderImage.setBounds(imageRect);
+				//if(temp!=null)	temp.recycle();
 				number = null;
 				uri = null;
 			}
@@ -535,7 +537,7 @@ public class ImageRing extends View {
 	 */
 	private static final String[]  project = new String[]{Phone._ID, Phone.PHOTO_THUMBNAIL_URI, Phone.NUMBER};
 	
-	private Bitmap getHolderImage(Uri uri,String number){
+	private Drawable getHolderImage(Uri uri,String number){
 		Bitmap bitmap = null;
 		if(uri!=null){
 			InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(this.getContext().getContentResolver(), uri,true); 
@@ -562,8 +564,13 @@ public class ImageRing extends View {
 			logd("load image from number:"+(number)+" :"+(bitmap!=null));
 		}
 		
-		if(bitmap!=null)
-			return toRoundBitmap(bitmap,mImageRadius);
+		if(bitmap!=null){
+			Drawable drawable = new BitmapDrawable(this.getResources(),toRoundBitmap(bitmap,mImageRadius));
+			if(drawable!=null){
+				drawable.setBounds(imageRect);
+			 	return drawable;
+			 }
+		}
 		isChecked = true;
 		return loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_header);
 	

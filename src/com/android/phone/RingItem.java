@@ -3,6 +3,7 @@ package com.android.phone;
 import android.graphics.Bitmap;
 import android.util.FloatMath;
 import android.util.Log;
+import android.graphics.drawable.Drawable;
 
 public class RingItem {
 	float distance;		// 激活有效距离
@@ -13,7 +14,7 @@ public class RingItem {
 	int width,height;	
 	
 	int funType = ImageRing.OnTriggerListener.REFUSE;
-	Bitmap iconNormal,iconClick;
+	Drawable iconNormal,iconClick;
 	boolean isActive = false;
 	boolean oldActive = false;
 	
@@ -24,15 +25,15 @@ public class RingItem {
 	 *distance	 激活距离，-1 代表图片直径
 	 *type		类型，默认 or 自定义
 	 */
-	public RingItem(Bitmap iconNormal, Bitmap iconClick, int position, float distance, int type){
+	public RingItem(Drawable iconNormal, Drawable iconClick, int position, float distance, int type){
 		this.iconNormal = iconNormal;
 		this.iconClick = iconClick==null? iconNormal : iconClick; 
 		this.position = position;
 		this.distance = distance;
 		if(iconNormal!=null){
-			this.width = iconNormal.getWidth();
-			this.height = iconNormal.getHeight();
-			this.distance = distance>0?	distance : 28+Math.max(iconNormal.getWidth(), iconNormal.getHeight());
+			this.width = iconNormal.getIntrinsicWidth();
+			this.height = iconNormal.getIntrinsicHeight();
+			this.distance = distance>0?	distance : Math.max(iconNormal.getIntrinsicWidth(), iconNormal.getIntrinsicHeight());
 		}
 		if(type>99 && type<102)
 			funType = type;
@@ -41,16 +42,22 @@ public class RingItem {
 	public void setCent(float cenX, float cenY) {
 		this.cenX = cenX;
 		this.cenY = cenY;
+		int xx = (int)cenX;
+		int yy = (int)cenY;
+		if(iconNormal!=null)
+			iconNormal.setBounds(xx,yy,xx+iconNormal.getIntrinsicWidth(),yy+iconNormal.getIntrinsicHeight());
+		if(iconClick!=null)
+			iconClick.setBounds(xx,yy,xx+iconClick.getIntrinsicWidth(),yy+iconClick.getIntrinsicHeight());
 		
-		this.ltX = cenX - (iconNormal==null? 0 : iconNormal.getWidth()>>1);
-		this.ltY = cenY + (iconNormal==null? 0 : iconNormal.getHeight()>>1);
+		this.ltX = cenX - (iconNormal==null? 0 : iconNormal.getIntrinsicWidth()>>1);
+		this.ltY = cenY + (iconNormal==null? 0 : iconNormal.getIntrinsicHeight()>>1);
 	}
 
-	public void checkPosition(float x,float y){
-		int xx = (int) Math.abs(x-cenX);
-		int yy = (int) Math.abs(y-cenY);
+	public void checkPosition(float x/*,float y*/){
+		//int xx = (int) Math.abs(x-cenX);
+		//int yy = (int) Math.abs(y-cenY);
 		
-		double distance = Math.sqrt(xx*xx + yy*yy);
+		double distance = Math.abs(x-cenX);//Math.sqrt(xx*xx + yy*yy);
 		if(this.distance>distance){
 			oldActive = isActive;
 			isActive = true;
