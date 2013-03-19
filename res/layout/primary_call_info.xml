@@ -65,17 +65,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/call_banner_side_padding"
-        android:paddingTop="12dp"
-        android:paddingBottom="5dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="4dp"
         android:background="@android:color/transparent">
         <!-- Name (or the phone number, if we don't have a name to display). -->
         <TextView android:id="@+id/name"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
+            android:paddingBottom="2dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="33sp"
+            android:textSize="30sp"
             android:textColor="@color/incall_call_banner_text_color"
             android:singleLine="true" />
 
@@ -90,14 +90,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textSize="17sp"
+                android:textSize="16sp"
                 android:textColor="@color/incall_call_banner_text_color"
                 android:singleLine="true" />
             <TextView android:id="@+id/label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textColor="@color/incall_call_banner_text_color"
                 android:textAllCaps="true"
                 android:singleLine="true"

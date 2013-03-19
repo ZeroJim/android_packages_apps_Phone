@@ -122,7 +122,7 @@
     <dimen name="dialpad_marginBottom">5dip</dimen>
     <dimen name="dialpad_paddingTop">8dip</dimen>
     <dimen name="dtmfDialerField_marginTop">5dip</dimen>
-    <dimen name="dtmfDialerField_marginBottom">2dip</dimen>
+    <dimen name="dtmfDialerField_marginBottom">0dip</dimen>
     <dimen name="dtmfDialerField_height">28dip</dimen>
     <!-- shutao 2013-2-28 -->
     
