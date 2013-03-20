@@ -53,12 +53,12 @@ public class ImageRing extends View {
 	private ExecutorService exec;
 	
 	private int mImageRadius;
-	private int defaultImageId;
-	private int imageBgId;
-	private int imageBgLightId;
-	private int imageTopId;
-	private int answerId;
-	private int refuseId;
+//	private int defaultImageId;
+//	private int imageBgId;
+//	private int imageBgLightId;
+//	private int imageTopId;
+//	private int answerId;
+//	private int refuseId;
 	
 	private int mAlpha = 255;
 	private int mVibrateDuration = 20;
@@ -71,6 +71,7 @@ public class ImageRing extends View {
 	private Bitmap answer;
 	private Bitmap refuse;
 */	
+	private Drawable defautlImage;
 	private Drawable imageBg;
 	private Drawable imageBgLight;
 	private Drawable imageTop;
@@ -112,12 +113,13 @@ public class ImageRing extends View {
 	public ImageRing(Context context, AttributeSet attrs) {
 		this(context, attrs,0);
 	}
+	/*
 	private int getResourceId(TypedArray mTypeArray, int id) {
         TypedValue tv = null;
         if(mTypeArray!=null)
         	tv = mTypeArray.peekValue(id);
         return tv == null ? 0 : tv.resourceId;
-    }
+    }*/
     
 	private void init(TypedArray mTypeArray) {
 		logd("=================init()");
@@ -129,16 +131,25 @@ public class ImageRing extends View {
 		mImageRadius 		= (int) mTypeArray.getDimension(R.styleable.ImageRing_radius, mImageRadius);
 		ringOffset = mTypeArray.getDimension(R.styleable.ImageRing_ringOffset, ringOffset);
 		
-		centPoint[0] = centPoint[1] = ringOffset * 2;
+		centPoint[0] = ringOffset + mImageRadius;
+		centPoint[1] = mImageRadius;
 		
 		mVibrateDuration = mTypeArray.getInt(R.styleable.ImageRing_vibrateDuration, mVibrateDuration);
 		
-		defaultImageId = getResourceId(mTypeArray,R.styleable.ImageRing_defaultImage);
-		imageTopId = getResourceId(mTypeArray,R.styleable.ImageRing_imageTop);
-		imageBgId = getResourceId(mTypeArray,R.styleable.ImageRing_imageBg);
-		imageBgLightId = getResourceId(mTypeArray,R.styleable.ImageRing_imageBgLight);
-		answerId = getResourceId(mTypeArray,R.styleable.ImageRing_answer);
-		refuseId = getResourceId(mTypeArray,R.styleable.ImageRing_refuse);
+		//defaultImageId = getResourceId(mTypeArray,R.styleable.ImageRing_defaultImage);
+		//imageTopId = getResourceId(mTypeArray,R.styleable.ImageRing_imageTop);
+		//imageBgId = getResourceId(mTypeArray,R.styleable.ImageRing_imageBg);
+		//imageBgLightId = getResourceId(mTypeArray,R.styleable.ImageRing_imageBgLight);
+		//answerId = getResourceId(mTypeArray,R.styleable.ImageRing_answer);
+		//refuseId = getResourceId(mTypeArray,R.styleable.ImageRing_refuse);
+		
+		defautlImage = mTypeArray.getDrawable(R.styleable.ImageRing_defaultImage);
+		imageBgLight = mTypeArray.getDrawable(R.styleable.ImageRing_imageBgLight);
+		imageBg = mTypeArray.getDrawable(R.styleable.ImageRing_imageBg);
+		imageTop = mTypeArray.getDrawable(R.styleable.ImageRing_imageTop);
+		holderImage = mTypeArray.getDrawable(R.styleable.ImageRing_defaultImage);
+		answer = mTypeArray.getDrawable(R.styleable.ImageRing_answer);
+		refuse = mTypeArray.getDrawable(R.styleable.ImageRing_refuse);
 		
 		alphaSelect = 255/ringOffset;
 		
@@ -163,7 +174,7 @@ public class ImageRing extends View {
 			headBgRect = new Rect();
 			headBgLightRect = new Rect();
 			
-			loadAllDrawable();
+			//loadAllDrawable();
 			
 			itemList = new ArrayList<RingItem>();
 			itemList.add(new RingItem(answer	,answer	,1,-1,OnTriggerListener.ANSWER));		// right
@@ -172,14 +183,14 @@ public class ImageRing extends View {
 			init = true;
 			reset();
 			ImageRing.this.postInvalidate();
-			exec.execute(bgRunnable);
+			backgroundRunnable();
 			logd("init=true,can be reset");
 		}
 	};
 	private Runnable bitmapLoad = new Runnable(){
 		public void run(){
 			logd("onBitmapLoad");
-			loadAllDrawable();
+			//loadAllDrawable();
 		}
 	};
 	
@@ -440,7 +451,7 @@ public class ImageRing extends View {
 		logd("answerRect ["+answerRect.left+","+answerRect.right+","+answerRect.top+","+answerRect.bottom+"]");
 		logd("refuseRect ["+refuseRect.left+","+refuseRect.right+","+refuseRect.top+","+refuseRect.bottom+"]");
 	}
-	
+/*	
 	private void loadAllDrawable(){
 		logd("loadAllDrawable()");
 		if(imageBgLight==null)	imageBgLight = loadDrawable(imageBgLightId);
@@ -461,6 +472,7 @@ public class ImageRing extends View {
 			);
 		reset();
 	}
+	*/
 /*	private Bitmap loadBitmap(int rId){
 		Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), rId);
 		bitmap.prepareToDraw();
@@ -572,9 +584,20 @@ public class ImageRing extends View {
 			 }
 		}
 		isChecked = true;
-		return loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_header);
+		return defautlImage;//loadDrawable(defaultImageId>0? defaultImageId:R.drawable.default_header);
 	
-	}									
+	}	
+	@Override
+	protected void onAttachedToWindow() {
+		super.onAttachedToWindow();
+		logd("onAttach");
+	}
+
+	@Override
+	protected void onDetachedFromWindow() {
+		super.onDetachedFromWindow();
+		logd("onDetAttach");
+	}								
 	
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -680,23 +703,21 @@ public class ImageRing extends View {
      */
 	int bgAlpha;
 	boolean bgFlag = true;
-	Runnable bgRunnable = new Runnable(){
-		public void run(){
-			while(true){
-				if(bgFlag)
-					bgAlpha ++;
-				else
-					bgAlpha --;
-				if(bgAlpha==0 || bgAlpha==255) bgFlag = !bgFlag; 
-				try {
-					if(ImageRing.this!=null)
-						ImageRing.this.postInvalidate();
-					Thread.sleep(2);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+	public void backgroundRunnable(){
+		while(true){
+			if(bgFlag)
+				bgAlpha ++;
+			else
+				bgAlpha --;
+			if(bgAlpha==0 || bgAlpha==255) bgFlag = !bgFlag; 
+			try {
+				if(ImageRing.this!=null)
+					ImageRing.this.postInvalidate();
+				Thread.sleep(2);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
-	};
+	}
 
 }
