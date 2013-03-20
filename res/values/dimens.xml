@@ -127,7 +127,7 @@
     <!-- shutao 2013-2-28 -->
     
     <dimen name="imagering_radius">52dp</dimen>
-    <dimen name="imagering_margin_bottom">21dp</dimen>
+    <dimen name="imagering_margin_bottom">61dp</dimen>
     <dimen name="imagering_ring_offset">120dp</dimen>
     <dimen name="imagering_ring_big_radius">99.5dp</dimen>
 </resources>
