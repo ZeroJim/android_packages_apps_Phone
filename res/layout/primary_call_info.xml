@@ -71,11 +71,12 @@
         <!-- Name (or the phone number, if we don't have a name to display). -->
         <TextView android:id="@+id/name"
             android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="2dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="30sp"
+            android:gravity="center"
             android:textColor="@color/incall_call_banner_text_color"
             android:singleLine="true" />
 
@@ -89,14 +90,14 @@
             <TextView android:id="@+id/phoneNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+  
                 android:textSize="16sp"
                 android:textColor="@color/incall_call_banner_text_color"
                 android:singleLine="true" />
             <TextView android:id="@+id/label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+
                 android:textSize="15sp"
                 android:textColor="@color/incall_call_banner_text_color"
                 android:textAllCaps="true"
@@ -110,7 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+
             android:textColor="@color/incall_call_banner_text_color"
             android:singleLine="true"
             android:visibility="gone" />
