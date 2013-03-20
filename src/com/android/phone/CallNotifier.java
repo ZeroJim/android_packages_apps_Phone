@@ -37,6 +37,7 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.AsyncResult;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
@@ -253,6 +254,17 @@ public class CallNotifier extends Handler
                     if ((pb.getState() == Phone.State.RINGING)
                             && (mSilentRingerRequested == false)) {
                         if (DBG) log("RINGING... (PHONE_INCOMING_RING event)");
+                        log("RINGING... (new)");
+                        //Log.w(LOG_TAG, "==========================RINGING===..mRinger = " + mRinger.mCustomRingtoneUri);
+                        String ringname = mRinger.mCustomRingtoneUri.toString();
+                        //Log.w(LOG_TAG, "==========================RING = 000000000 " + ringname + " ========= " + Environment.getExternalStorageState());
+                        if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                            if(ringname!=null && ringname.contains("external")){
+                                mRinger.setCustomRingtoneUri(Settings.System.DEFAULT_RINGTONE_URI);
+                                //Log.w(LOG_TAG, "=====RING = 000000000 " + Settings.System.DEFAULT_RINGTONE_URI);
+                            }
+                        }
+                        //Log.w(LOG_TAG, "=======rington = " + mRinger.mRingtone + "....mRinger = " + mRinger.mCustomRingtoneUri);
                         mRinger.ring();
                     } else {
                         if (DBG) log("RING before NEW_RING, skipping");
@@ -608,6 +620,7 @@ public class CallNotifier extends Handler
 
             // In this case, just log the request and ring.
             if (VDBG) log("RINGING... (request to ring arrived while query is running)");
+            //Log.w(LOG_TAG, "=============================..mRinger = " + mRinger);
             mRinger.ring();
 
             // in this case, just fall through like before, and call
