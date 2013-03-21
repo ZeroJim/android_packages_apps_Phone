@@ -60,7 +60,7 @@
         <ImageButton android:id="@+id/cdmaMergeButtonImage"
             android:clickable="false"
             style="@style/InCallExtraRowButton"
-            android:src="@drawable/ic_merge_holo_dark"
+             android:background="@drawable/ic_merge_holo_dark_selector"
             android:contentDescription="@string/onscreenMergeCallsText" />
         <TextView android:id="@+id/cdmaMergeButtonLabel"
             style="@style/InCallExtraRowButtonLabel"
