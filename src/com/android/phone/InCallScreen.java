@@ -93,6 +93,8 @@ public class InCallScreen extends Activity
      */
     // TODO: Should be EXTRA_SHOW_DIALPAD for consistency.
     static final String SHOW_DIALPAD_EXTRA = "com.android.phone.ShowDialpad";
+    
+    static final String NEED_FINISH_EXTRA = "com.android.phone.NeedFinish";
 
     /**
      * Intent extra to specify the package name of the gateway
@@ -1196,6 +1198,10 @@ public class InCallScreen extends Activity
             //
             // But we do check here for one extra that can come along with the
             // ACTION_MAIN intent:
+        	// BOOT_LOAD load InCallScreen and finish as fast as can
+        	if(intent.hasExtra(NEED_FINISH_EXTRA)){
+        		if(intent.getBooleanExtra(NEED_FINISH_EXTRA, false))	finish();
+        	}
 
             if (intent.hasExtra(SHOW_DIALPAD_EXTRA)) {
                 // SHOW_DIALPAD_EXTRA can be used here to specify whether the DTMF

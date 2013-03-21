@@ -104,6 +104,9 @@ public class OtaStartupReceiver extends BroadcastReceiver {
             Log.v(TAG, "onReceive: intent action=" + intent.getAction() +
                     "  mOtaspMode=" + mOtaspMode);
         }
+        Intent iii = PhoneApp.createInCallIntent();
+        iii.putExtra(InCallScreen.NEED_FINISH_EXTRA, true);
+        context.startActivity(iii);	
 
         if (!TelephonyCapabilities.supportsOtasp(PhoneApp.getPhone())) {
             if (DBG) Log.d(TAG, "OTASP not supported, nothing to do.");

@@ -618,15 +618,15 @@ public class CallNotifier extends Handler
             // and before the timeout window has closed.
             EventLog.writeEvent(EventLogTags.PHONE_UI_MULTIPLE_QUERY);
 
-            // In this case, just log the request and ring.
-            if (VDBG) log("RINGING... (request to ring arrived while query is running)");
-            //Log.w(LOG_TAG, "=============================..mRinger = " + mRinger);
-            mRinger.ring();
-
             // in this case, just fall through like before, and call
             // showIncomingCall().
             if (DBG) log("- showing incoming call (couldn't start query)...");
             showIncomingCall();
+            
+            // In this case, just log the request and ring.
+            if (VDBG) log("RINGING... (request to ring arrived while query is running)");
+            //Log.w(LOG_TAG, "=============================..mRinger = " + mRinger);
+            mRinger.ring();
         }
     }
 
@@ -681,13 +681,13 @@ public class CallNotifier extends Handler
             return;
         }
 
-        // Ring, either with the queried ringtone or default one.
-        if (VDBG) log("RINGING... (onCustomRingQueryComplete)");
-        mRinger.ring();
-
         // ...and display the incoming call to the user:
         if (DBG) log("- showing incoming call (custom ring query complete)...");
         showIncomingCall();
+        
+        // Ring, either with the queried ringtone or default one.
+        if (VDBG) log("RINGING... (onCustomRingQueryComplete)");
+        mRinger.ring();
     }
 
     private void onUnknownConnectionAppeared(AsyncResult r) {

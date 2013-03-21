@@ -50,6 +50,7 @@ public class ImageRing extends View {
 	private boolean isShow = false;
 	private boolean isMeasure = false;
 	private boolean loadOver = false;
+	private boolean isAnmiRuning = false;
 	
 	private Vibrator mVibrator;
 	private Paint mPaint;
@@ -509,7 +510,7 @@ public class ImageRing extends View {
 		case View.VISIBLE:
 			logd("onVisibilityChange: VISIBLE");
 			isShow = true;
-			if(exec!=null)
+			if(exec!=null && !isAnmiRuning)
 				exec.execute(anmiRunnable);
 			break;
 		case View.INVISIBLE:
@@ -656,6 +657,7 @@ public class ImageRing extends View {
 				if(number!=null || uri!=null)
 					loadHolderInRunnable();
 				loadOver = true;
+				isAnmiRuning = true;
 				while(isShow){
 					if(bgFlag)
 						bgAlpha ++;
@@ -666,6 +668,7 @@ public class ImageRing extends View {
 					if(ImageRing.this!=null)	ImageRing.this.postInvalidate();
 					Thread.sleep(2);
 				}
+				isAnmiRuning = false;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
