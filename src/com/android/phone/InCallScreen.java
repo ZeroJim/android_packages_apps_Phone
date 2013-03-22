@@ -545,9 +545,10 @@ public class InCallScreen extends Activity
         mPhone = phone;
     }
 
+    private IntentFilter headSetPlusFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
     @Override
     protected void onResume() {
-        if (DBG) log("onResume()...");
+        if (DBG) log("onResume()...	====:"+System.currentTimeMillis());
         super.onResume();
 
         mIsForegroundActivity = true;
@@ -573,7 +574,7 @@ public class InCallScreen extends Activity
         mApp.notificationMgr.updateInCallNotification();
 
         // Listen for broadcast intents that might affect the onscreen UI.
-        registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+        registerReceiver(mReceiver, headSetPlusFilter);
 
         // Keep a "dialer session" active when we're in the foreground.
         // (This is needed to play DTMF tones.)

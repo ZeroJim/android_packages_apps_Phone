@@ -1045,7 +1045,7 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
 
         // Line 2 of the expanded view (smaller text).  This is usually a
         // contact name or phone number.
-        String expandedViewLine2 = "";
+        String expandedViewLine2 = null;
         // TODO: it may not make sense for every point to make separate
         // checks for isConferenceCall, so we need to think about
         // possibly including this in startGetCallerInfo or some other
@@ -1142,7 +1142,8 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
         }
 
         Notification notification = builder.getNotification();
-        if (DBG) log("Notifying IN_CALL_NOTIFICATION: " + notification);
+        
+        if (DBG) log("Notifying IN_CALL_NOTIFICATION: " + notification +"	====:"+System.currentTimeMillis());
         mNotificationManager.notify(IN_CALL_NOTIFICATION, notification);
 
         // Finally, refresh the mute and speakerphone notifications (since

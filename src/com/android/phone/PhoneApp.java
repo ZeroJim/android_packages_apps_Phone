@@ -138,7 +138,8 @@ public class PhoneApp extends Application implements AccelerometerListener.Orien
     public enum WakeState {
         SLEEP,
         PARTIAL,
-        FULL
+        FULL,
+        SCREEN
     }
 
     /**
@@ -235,6 +236,7 @@ public class PhoneApp extends Application implements AccelerometerListener.Orien
 
     private IPowerManager mPowerManagerService;
     private PowerManager.WakeLock mWakeLock;
+    private PowerManager.WakeLock mScreenWakeLock;
     private PowerManager.WakeLock mPartialWakeLock;
     private PowerManager.WakeLock mProximityWakeLock;
     private KeyguardManager mKeyguardManager;
@@ -513,6 +515,7 @@ public class PhoneApp extends Application implements AccelerometerListener.Orien
                     | PowerManager.ACQUIRE_CAUSES_WAKEUP
                     | PowerManager.ON_AFTER_RELEASE,
                     LOG_TAG);
+            mScreenWakeLock = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP|PowerManager.SCREEN_DIM_WAKE_LOCK, LOG_TAG);
             // lock used to keep the processor awake, when we don't care for the display.
             mPartialWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK
                     | PowerManager.ON_AFTER_RELEASE, LOG_TAG);
@@ -1087,6 +1090,10 @@ public class PhoneApp extends Application implements AccelerometerListener.Orien
                             mPartialWakeLock.release();
                         }
                         break;
+                    case SCREEN:
+	                    	mScreenWakeLock.acquire();
+	                    	mScreenWakeLock.release();
+	                    	break;
                     case SLEEP:
                     default:
                         // release both the PARTIAL and FULL locks.

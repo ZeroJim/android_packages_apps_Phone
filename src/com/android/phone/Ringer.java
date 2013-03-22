@@ -169,6 +169,7 @@ public class Ringer {
             if (shouldVibrate() && mVibratorThread == null) {
                 mContinueVibrating = true;
                 mVibratorThread = new VibratorThread();
+                SystemClock.sleep(300);	// sleep 300 for sync with incoming call
                 if (DBG) log("- starting vibrator...");
                 mVibratorThread.start();
             }

@@ -758,7 +758,7 @@ public class CallNotifier extends Handler
         //
         // TODO: also, we should probably *not* do any of this if the
         // screen is already on(!)
-
+        mApplication.requestWakeState(PhoneApp.WakeState.SCREEN);
         mApplication.preventScreenOn(true);
         mApplication.requestWakeState(PhoneApp.WakeState.FULL);
 
