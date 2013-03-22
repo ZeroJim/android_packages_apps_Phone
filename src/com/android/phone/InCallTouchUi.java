@@ -1174,8 +1174,9 @@ public class InCallTouchUi extends FrameLayout
         // TODO: remove this once we fixed issue 6603655
         // TODO: wouldn't be ok to suppress this whole request if the widget is already VISIBLE
         //       and we don't need to reset it?
-        log("showIncomingCallWidget(). widget visibility: " + mIncomingCallWidget.getVisibility());
-
+        if(DBG) log("showIncomingCallWidget(). will set visible! widget visibility: " + mIncomingCallWidget.getVisibility() +" :"+System.currentTimeMillis());
+        mIncomingCallWidget.setVisibility(View.VISIBLE);
+        
         ViewPropertyAnimator animator = mIncomingCallWidget.animate();
         if (animator != null) {
             animator.cancel();
@@ -1224,7 +1225,7 @@ public class InCallTouchUi extends FrameLayout
             mIncomingCallWidgetShouldBeReset = false;
         }
 		*/
-        mIncomingCallWidget.setVisibility(View.VISIBLE);
+ //       mIncomingCallWidget.setVisibility(View.VISIBLE);
 
         // Finally, manually trigger a "ping" animation.
         //

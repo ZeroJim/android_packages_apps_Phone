@@ -291,6 +291,7 @@ public class Ringer {
 
     private class VibratorThread extends Thread {
         public void run() {
+        	if(DBG)	log("================startVibrator:"+System.currentTimeMillis());
             while (mContinueVibrating) {
                 mVibrator.vibrate(VIBRATE_LENGTH);
                 SystemClock.sleep(VIBRATE_LENGTH + PAUSE_LENGTH);

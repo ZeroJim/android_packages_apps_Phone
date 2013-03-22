@@ -29,6 +29,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
+import android.os.SystemProperties;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
@@ -41,7 +42,8 @@ import android.net.Uri;
 
 public class ImageRing extends View {
 	private static final String TAG = "ImageRing";
-	private static final boolean debug = true;
+	private static final boolean debug = 
+			(PhoneApp.DBG_LEVEL >= 1) && (SystemProperties.getInt("ro.debuggable", 0) == 1);
 	
 	private static final int OK = 200;
 	private static boolean init = false;
@@ -505,10 +507,9 @@ public class ImageRing extends View {
 	
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
-		super.onWindowVisibilityChanged(visibility);
 		switch(visibility){
 		case View.VISIBLE:
-			logd("onVisibilityChange: VISIBLE");
+			logd("onVisibilityChange: VISIBLE	===========:"+System.currentTimeMillis());
 			isShow = true;
 			if(exec!=null && !isAnmiRuning)
 				exec.execute(anmiRunnable);
@@ -524,7 +525,11 @@ public class ImageRing extends View {
 			uri = null;
 			number = null;
 			break;
+		default:
+			loge("onWindowVisibilityChanged: err!!! 	should not be there	visibility="+visibility);
+			break;
 		}
+		super.onWindowVisibilityChanged(visibility);
 	}
 	
 	@Override
