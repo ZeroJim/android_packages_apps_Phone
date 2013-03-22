@@ -74,12 +74,12 @@ public class ImageRing extends View {
 	private Drawable answer;
 	private Drawable refuse;
 	
-	private Rect imageRect;
-	private Rect headBgRect;
-	private Rect headBgLightRect;
-	private Rect headTopRect;
-	private Rect answerRect;
-	private Rect refuseRect;
+	private Rect imageRect = new Rect();
+	private Rect headBgRect = new Rect();
+	private Rect headBgLightRect = new Rect();
+	private Rect headTopRect = new Rect();
+	private Rect answerRect = new Rect();
+	private Rect refuseRect = new Rect();
 	
 	private float[] centPoint	= new float[2];
 	private float[] posHold 	= new float[2];
@@ -141,12 +141,6 @@ public class ImageRing extends View {
 		
 		mVibrator = (Vibrator) this.getContext().getSystemService(Context.VIBRATOR_SERVICE);
 		
-		imageRect = new Rect();
-		headTopRect = new Rect();
-		answerRect = new Rect();
-		refuseRect = new Rect();
-		headBgRect = new Rect();
-		headBgLightRect = new Rect();
 		itemList = new ArrayList<RingItem>();
 		itemList.add(new RingItem(answer	,answer	,1,-1,OnTriggerListener.ANSWER));		// right
 		itemList.add(new RingItem(refuse	,refuse	,-1	,-1,OnTriggerListener.REFUSE));		// left
@@ -155,32 +149,7 @@ public class ImageRing extends View {
 		reset();
 		loge("init time="+(System.currentTimeMillis()-t1));
 	}
-/*	
-	private Runnable backgroundLoad = new Runnable(){
-		@Override
-		public void run() {
-		
-			imageRect = new Rect();
-			headTopRect = new Rect();
-			answerRect = new Rect();
-			refuseRect = new Rect();
-			headBgRect = new Rect();
-			headBgLightRect = new Rect();
-			
-			//loadAllDrawable();
-			
-			itemList = new ArrayList<RingItem>();
-			itemList.add(new RingItem(answer	,answer	,1,-1,OnTriggerListener.ANSWER));		// right
-			itemList.add(new RingItem(refuse	,refuse	,-1	,-1,OnTriggerListener.REFUSE));		// left
-			
-			init = true;
-			reset();
-			ImageRing.this.postInvalidate();
-			backgroundRunnable();
-			logd("init=true,can be reset");
-		}
-	};
-	*/
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
@@ -301,20 +270,30 @@ public class ImageRing extends View {
 				holder.isActive = false;
 			}
 		}
-		//if(!isActive){
+		if(!isActive){
 			isImageMove = false;
 			posHold[0] = posHold[1] = 0;
 			posFix[0] = posFix[1] = 0;
 			holderImage.setBounds(imageRect);
 			imageBg.setBounds(headBgRect);
 			imageTop.setBounds(headTopRect);
-		//}
+		}
 	}
 	//----------------------------//
 	private void actionMove(MotionEvent event){
 		if(!isImageMove) return;			// 超出可移动范围
 		
 		float eventX =  event.getX();
+		
+		{
+			float tx = eventX - posHold[0] ;		// 圆心移动的距离x
+			if(tx>ringOffset){
+				eventX = posHold[0] + ringOffset;
+			}else if(tx<-ringOffset){
+				eventX = posHold[0] - ringOffset;
+			}
+        }
+		
 		posFix[0] = eventX - posHold[0];
 		
 		for(int i=0;i<itemList.size();i++){
@@ -510,7 +489,7 @@ public class ImageRing extends View {
 		switch(visibility){
 		case View.VISIBLE:
 			logd("onVisibilityChange: VISIBLE	===========:"+System.currentTimeMillis());
-			isShow = true;
+			vinit();
 			if(exec!=null && !isAnmiRuning)
 				exec.execute(anmiRunnable);
 			break;
@@ -518,18 +497,28 @@ public class ImageRing extends View {
 			logd("onVisibilityChange: INVISIBLE");
 		case View.GONE:
 			logd("onVisibilityChange: GONE");
-			loadOver = false;
-			isMeasure = false;
-			isShow = false;
-			holderImage = null;
-			uri = null;
-			number = null;
+			clean();
 			break;
 		default:
 			loge("onWindowVisibilityChanged: err!!! 	should not be there	visibility="+visibility);
 			break;
 		}
 		super.onWindowVisibilityChanged(visibility);
+	}
+	private void vinit(){
+		isShow = true;
+		if(holderImage!=null)	holderImage.setBounds(imageRect);
+		if(imageBg!=null)	imageBg.setBounds(headBgRect);
+		if(imageTop!=null)	imageTop.setBounds(headTopRect);
+	}
+	
+	private void clean(){
+		loadOver = isMeasure = isShow = isImageMove = false;
+		posHold[0] = posHold[1] = posFix[0] = posFix[1] = 0;
+		
+		uri = null;
+		number = null;
+		holderImage = null;
 	}
 	
 	@Override
