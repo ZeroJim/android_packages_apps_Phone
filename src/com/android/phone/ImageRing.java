@@ -393,17 +393,22 @@ public class ImageRing extends View {
 			mVibrator.vibrate(mVibrateDuration);
 		}
 	}
+	private boolean isFirst = true;
 	public void setInComingNumber(String number){
 		this.number = number;
 		logd("on setInComingNumber: "+number);
-		if(loadOver && holderImage==null )
+		if(isFirst && loadOver && holderImage==null ){
 			exec.execute(loadHolderImageRunnable);
+			isFirst = false;
+		}
 	}
 	void setInComingUri(Uri uri){
 		this.uri = uri;
 		logd("on setInComingUri: "+uri);
-		if(loadOver && holderImage==null )
+		if(isFirst && loadOver && holderImage==null ){
 			exec.execute(loadHolderImageRunnable);
+			isFirst = false;
+		}
 	}
 
 	private Runnable loadHolderImageRunnable = new Runnable(){
@@ -449,9 +454,16 @@ public class ImageRing extends View {
 	private Drawable getHolderImage(Uri uri,String number){
 		Bitmap bitmap = null;
 		if(uri!=null){
-			InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(this.getContext().getContentResolver(), uri,true); 
-			bitmap = BitmapFactory.decodeStream(input);
-			logd("load image from uri :"+(bitmap!=null));
+			try{
+				InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(this.getContext().getContentResolver(), uri,true); 
+				if(input!=null){
+					bitmap = BitmapFactory.decodeStream(input);
+					input.close();
+				}
+				logd("load image from uri :"+(bitmap!=null));
+			}catch(IOException e){
+				e.printStackTrace();
+			}
 		}
 		if(bitmap==null && (number!=null && !number.isEmpty())){
 			Cursor c = this.getContext().getContentResolver()
@@ -461,8 +473,10 @@ public class ImageRing extends View {
 					if(c.moveToFirst()&&c.getString(1)!=null){
 						Uri u = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, c.getLong(0)); 
 						InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(this.getContext().getContentResolver(), u,true); 
-						bitmap = BitmapFactory.decodeStream(input);
-						input.close();
+						if(input!=null){
+							bitmap = BitmapFactory.decodeStream(input);
+							input.close();
+						}
 					}
 				}catch(IOException e){
 					e.printStackTrace();
@@ -492,18 +506,20 @@ public class ImageRing extends View {
 			vinit();
 			if(exec!=null && !isAnmiRuning)
 				exec.execute(anmiRunnable);
+			super.onWindowVisibilityChanged(visibility);
 			break;
 		case View.INVISIBLE:
 			logd("onVisibilityChange: INVISIBLE");
 		case View.GONE:
+			super.onWindowVisibilityChanged(visibility);
 			logd("onVisibilityChange: GONE");
 			clean();
 			break;
 		default:
 			loge("onWindowVisibilityChanged: err!!! 	should not be there	visibility="+visibility);
+			super.onWindowVisibilityChanged(visibility);
 			break;
 		}
-		super.onWindowVisibilityChanged(visibility);
 	}
 	private void vinit(){
 		isShow = true;
@@ -514,6 +530,7 @@ public class ImageRing extends View {
 	
 	private void clean(){
 		loadOver = isMeasure = isShow = isImageMove = false;
+		isFirst = true;
 		posHold[0] = posHold[1] = posFix[0] = posFix[1] = 0;
 		
 		uri = null;
