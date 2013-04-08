@@ -274,7 +274,9 @@ public class ImageRing extends View {
 			isImageMove = false;
 			posHold[0] = posHold[1] = 0;
 			posFix[0] = posFix[1] = 0;
-			holderImage.setBounds(imageRect);
+                        if (holderImage != null) {
+			    holderImage.setBounds(imageRect);
+                        }
 			imageBg.setBounds(headBgRect);
 			imageTop.setBounds(headTopRect);
 		}
@@ -453,6 +455,7 @@ public class ImageRing extends View {
 	
 	private Drawable getHolderImage(Uri uri,String number){
 		Bitmap bitmap = null;
+
 		if(uri!=null){
 			try{
 				InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(this.getContext().getContentResolver(), uri,true); 
@@ -461,7 +464,7 @@ public class ImageRing extends View {
 					input.close();
 				}
 				logd("load image from uri :"+(bitmap!=null));
-			}catch(IOException e){
+			}catch(Exception e){
 				e.printStackTrace();
 			}
 		}
