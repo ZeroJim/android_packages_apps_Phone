@@ -1291,7 +1291,9 @@ public class CallCard extends FrameLayout
             }
             personUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, info.person_id);
             mInCallScreen.getInCallTouchUi().getIncomingCallWidget().setInComingUri(personUri);
-            mInCallScreen.getInCallTouchUi().getIncomingCallWidget().setInComingNumber(number.replaceAll(" ", ""));
+            if (number != null && !number.isEmpty()) {
+                mInCallScreen.getInCallTouchUi().getIncomingCallWidget().setInComingNumber(number.replaceAll(" ", ""));
+            }
             if (DBG) log("- got personUri: '" + personUri
                          + "', based on info.person_id: " + info.person_id);
         } else {
