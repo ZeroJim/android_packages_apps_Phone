@@ -209,6 +209,7 @@ public class InCallScreen extends Activity
 
     // UI controls:
     private InCallControlState mInCallControlState;
+    private ShenDuInCallTouchUi mShenDuTouchUi;
     private InCallTouchUi mInCallTouchUi;
     private RespondViaSmsManager mRespondViaSmsManager;  // see internalRespondViaSms()
     private ManageConferenceUtils mManageConferenceUtils;
@@ -248,6 +249,8 @@ public class InCallScreen extends Activity
     // For use with Pause/Wait dialogs
     private String mPostDialStrAfterPause;
     private boolean mPauseInProgress = false;
+
+    public static boolean sUseLegency = false;
 
     // Info about the most-recently-disconnected Connection, which is used
     // to determine what should happen when exiting the InCallScreen after a
@@ -307,7 +310,13 @@ public class InCallScreen extends Activity
                     // it's visible, since one of its items is either "Wired
                     // headset" or "Handset earpiece" depending on whether the
                     // headset is plugged in or not.
-                    mInCallTouchUi.refreshAudioModePopup();  // safe even if the popup's not active
+                    if (mInCallTouchUi != null) {
+                        mInCallTouchUi.refreshAudioModePopup();  // safe even if the popup's not active
+                    }
+
+                    if (mShenDuTouchUi != null) {
+                        mShenDuTouchUi.refreshAudioModePopup();
+                    }
 
                     break;
 
@@ -496,7 +505,8 @@ public class InCallScreen extends Activity
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // Inflate everything in incall_screen.xml and add it to the screen.
-        setContentView(R.layout.incall_screen);
+        sUseLegency = getSharedPreferences(getPackageName() + "_preferences", 0).getBoolean(CallFeaturesSetting.BUTTON_USE_LEGENCY_KEY, false);
+        setContentView(sUseLegency? R.layout.incall_screen : R.layout.shendu_incall_screen);
 
         initInCallScreen();
 
@@ -981,6 +991,10 @@ public class InCallScreen extends Activity
         if (mInCallTouchUi != null) {
             mInCallTouchUi.setInCallScreenInstance(null);
         }
+        if (mShenDuTouchUi != null) {
+            mShenDuTouchUi.setInCallScreenInstance(null);
+        }
+
         mRespondViaSmsManager.setInCallScreenInstance(null);
 
         mDialer.clearInCallScreenReference();
@@ -4051,7 +4065,19 @@ public class InCallScreen extends Activity
         // end up not using *any* onscreen touch UI, we should make sure
         // to not even inflate the InCallTouchUi widget on those devices.
         mInCallTouchUi = (InCallTouchUi) findViewById(R.id.inCallTouchUi);
-        mInCallTouchUi.setInCallScreenInstance(this);
+        if (mInCallTouchUi != null) {
+            mInCallTouchUi.setInCallScreenInstance(this);
+        }
+
+        mInCallTouchUi = (InCallTouchUi) findViewById(R.id.inCallTouchUi);
+        if (mInCallTouchUi != null) {
+            mInCallTouchUi.setInCallScreenInstance(this);
+        }
+
+        mShenDuTouchUi = (ShenDuInCallTouchUi) findViewById(R.id.shenduInCallTouchUi);
+        if (mShenDuTouchUi != null) {
+            mShenDuTouchUi.setInCallScreenInstance(this);
+        }
 
         // RespondViaSmsManager implements the "Respond via SMS"
         // feature that's triggered from the incoming call widget.
@@ -4066,13 +4092,17 @@ public class InCallScreen extends Activity
         if (mInCallTouchUi != null) {
             mInCallTouchUi.updateState(mCM);
         }
+
+        if (mShenDuTouchUi != null) {
+            mShenDuTouchUi.updateState(mCM);
+        }
     }
 
     /**
      * @return the InCallTouchUi widget
      */
-    /* package */ InCallTouchUi getInCallTouchUi() {
-        return mInCallTouchUi;
+    /* package */ Object getInCallTouchUi() {
+        return mInCallTouchUi == null ? mShenDuTouchUi : mInCallTouchUi;
     }
 
     /**
@@ -4401,7 +4431,7 @@ public class InCallScreen extends Activity
             // (This call has no effect if the UI widgets have already been set up.
             // It only really matters  the very first time that the InCallScreen instance
             // is onResume()d after starting an OTASP call.)
-            mApp.otaUtils.updateUiWidgets(this, mInCallTouchUi, mCallCard);
+            mApp.otaUtils.updateUiWidgets(this, mInCallTouchUi != null ? mInCallTouchUi : mShenDuTouchUi, mCallCard);
 
             // Also update the InCallScreenMode based on the cdmaOtaInCallScreenState.
 
@@ -4587,6 +4617,9 @@ public class InCallScreen extends Activity
         // incoming-call UI.)
         if (mIsForegroundActivity && (mInCallTouchUi != null)) {
             mInCallTouchUi.onIncomingRing();
+        }
+        if (mIsForegroundActivity && (mShenDuTouchUi != null)) {
+            mShenDuTouchUi.onIncomingRing();
         }
     }
 

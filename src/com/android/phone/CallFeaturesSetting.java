@@ -178,6 +178,8 @@ public class CallFeaturesSetting extends PreferenceActivity
     private static final String BUTTON_GSM_UMTS_OPTIONS = "button_gsm_more_expand_key";
     private static final String BUTTON_CDMA_OPTIONS = "button_cdma_more_expand_key";
 
+    public static final String BUTTON_USE_LEGENCY_KEY = "button_use_legency_key";
+
     private static final String VM_NUMBERS_SHARED_PREFERENCES_NAME = "vm_numbers";
 
     private static final String BUTTON_SIP_CALL_OPTIONS =
@@ -271,6 +273,7 @@ public class CallFeaturesSetting extends PreferenceActivity
     private ListPreference mVoicemailNotificationVibrateWhen;
     private SipSharedPreferences mSipSharedPreferences;
     private CheckBoxPreference mCallEndedWithScreenOffLocks;
+    private CheckBoxPreference mUseLegency;
 
     private class VoiceMailProvider {
         public VoiceMailProvider(String name, Intent intent) {
@@ -497,6 +500,9 @@ public class CallFeaturesSetting extends PreferenceActivity
             android.provider.Settings.System.putInt(mPhone.getContext().getContentResolver(),
                     android.provider.Settings.System.CALL_AUTO_RETRY,
                     mButtonAutoRetry.isChecked() ? 1 : 0);
+            return true;
+        } else if (preference == mUseLegency) {
+            InCallScreen.sUseLegency = mUseLegency.isChecked();
             return true;
         } else if (preference == mButtonHAC) {
             int hac = mButtonHAC.isChecked() ? 1 : 0;
@@ -1526,6 +1532,7 @@ public class CallFeaturesSetting extends PreferenceActivity
             mSubMenuVoicemailSettings.setDialogTitle(R.string.voicemail_settings_number_label);
         }
 
+        mUseLegency = (CheckBoxPreference) findPreference(BUTTON_USE_LEGENCY_KEY);
         mRingtonePreference = findPreference(BUTTON_RINGTONE_KEY);
         mVibrateWhenRinging = (CheckBoxPreference) findPreference(BUTTON_VIBRATE_ON_RING);
         mCallEndedWithScreenOffLocks = (CheckBoxPreference) findPreference(LOCKSCREEN_IF_CALL_ENDS_WITH_SCREENOFF);

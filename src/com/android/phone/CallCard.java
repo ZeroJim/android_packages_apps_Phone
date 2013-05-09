@@ -323,7 +323,9 @@ public class CallCard extends FrameLayout
         //   the call info area won't overlap with the touchable
         //   controls on the bottom part of the screen.
 
-        int reservedVerticalSpace = mInCallScreen.getInCallTouchUi().getTouchUiHeight();
+        int reservedVerticalSpace = mInCallScreen.getInCallTouchUi() instanceof InCallTouchUi ?
+            ((InCallTouchUi)mInCallScreen.getInCallTouchUi()).getTouchUiHeight()
+            : ((ShenDuInCallTouchUi)mInCallScreen.getInCallTouchUi()).getTouchUiHeight();
         ViewGroup.MarginLayoutParams callInfoLp =
                 (ViewGroup.MarginLayoutParams) mCallInfoContainer.getLayoutParams();
         callInfoLp.bottomMargin = reservedVerticalSpace;  // Equivalent to setting
@@ -1290,9 +1292,12 @@ public class CallCard extends FrameLayout
                 }
             }
             personUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, info.person_id);
-            mInCallScreen.getInCallTouchUi().getIncomingCallWidget().setInComingUri(personUri);
-            if (number != null && !number.isEmpty()) {
-                mInCallScreen.getInCallTouchUi().getIncomingCallWidget().setInComingNumber(number.replaceAll(" ", ""));
+            if (mInCallScreen.getInCallTouchUi() instanceof ShenDuInCallTouchUi) {
+                ShenDuInCallTouchUi mShenDuTouchUi = (ShenDuInCallTouchUi) mInCallScreen.getInCallTouchUi();
+                mShenDuTouchUi.getIncomingCallWidget().setInComingUri(personUri);
+                if (number != null && !number.isEmpty()) {
+                    mShenDuTouchUi.getIncomingCallWidget().setInComingNumber(number.replaceAll(" ", ""));
+                }
             }
             if (DBG) log("- got personUri: '" + personUri
                          + "', based on info.person_id: " + info.person_id);

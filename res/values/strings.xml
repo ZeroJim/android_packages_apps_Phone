@@ -1514,5 +1514,7 @@
     <string name="vibrate_hangup">Vibrate on hang up</string>
     <string name="vibrate_45">Vibrate every 45 seconds</string>
     <string name="vibrate_45_sum">Vibrates at the 45 second mark of every minute during outgoing calls</string>
-	<string name="in_call_end_button_string">finish</string>
+    <string name="in_call_end_button_string">finish</string>
+    <string name="use_legency_title">Use legency incall screen</string>
+    <string name="available_after_reboot">Available after reboot</string>
 </resources>

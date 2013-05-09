@@ -226,4 +226,11 @@
             android:targetClass="com.android.contacts.preference.DialpadPreferenceActivity"/>
     </PreferenceScreen> -->
 
+    <CheckBoxPreference
+      android:key="button_use_legency_key"
+      android:title="@string/use_legency_title"
+      android:summary="@string/available_after_reboot"
+      android:persistent="true"
+      android:defaultValue="false" />
+
 </PreferenceScreen>
