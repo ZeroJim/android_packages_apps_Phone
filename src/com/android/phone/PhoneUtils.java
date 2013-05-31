@@ -808,6 +808,9 @@ public class PhoneUtils {
             // When VDBG is true we emit PII.
             return number;
         }
+        if (number == null) {
+            return "";
+        }
 
         // Do exactly same thing as Uri#toSafeString() does, which will enable us to compare
         // sanitized phone numbers.
